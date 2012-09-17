@@ -1,0 +1,12 @@
+#!/bin/sh
+TESTS_STARTED=`date`
+./c-lang/test/test_astr
+./c-lang/test/test_astr_classifications
+./c-lang/test/test_astr_comparisons
+./c-lang/test/test_astr_conversions
+./c-lang/test/test_astr_edits
+./c-lang/test/test_astr_utilities
+./c-lang/test/test_afile
+./c-lang/test/test_afile_process
+TESTS_ENDED=`date`
+echo "Tests started $TESTS_STARTED, ended $TESTS_ENDED"

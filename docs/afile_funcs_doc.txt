@@ -1,0 +1,140 @@
+
+// afile.c - Adept File 
+/*
+ * File processing functions.
+ */
+                                      // readonly mode
+                                              // 16KB buffer size
+                                           // line buffering mode
+/*
+ * afile_create
+ *
+ * Create an afile instance with default parameters.
+ *
+ * Parameter: The file specification (optional path, file name)
+ * Parameter: The file open modes
+ */
+/*
+ * afile_create_explicit
+ *
+ * Create an afile instance with the specified explicit parameters.
+ *
+ * Parameter: The file specification (optional path, file name)
+ * Parameter: The file open modes
+ * Parameter: The file buffer size
+ * Parameter: The file buffering mode
+ * Returns:   Pointer to the afile instance
+ */
+/*
+ * afile_set_filespec
+ *
+ * Initialize an afile file specification.
+ *
+ * This can only be set before the file is opened.
+ *
+ * Parameter: The file specification (optional path, file name)
+ */
+/*
+ * afile_set_open_modes
+ *
+ * Initialize an afile open mode string.
+ *
+ * This can only be set before the file is opened.
+ *
+ * Parameter: The file open modes
+ */
+getcmt getcmt(): 100 lines in 0 seconds.
+/*
+ * afile_set_buffering_mode
+ *
+ * Initialize an afile buffering mode.
+ *
+ * This can only be set before the file is opened.
+ *
+ * Parameter: The file buffering mode
+ */
+/*
+ * afile_set_buffer_size
+ *
+ * Initialize an afile buffer size.
+ *
+ * This can only be set before the file is opened.
+ *
+ * Parameter: The file buffer size
+ */
+/*
+ * afile_open
+ *
+ * Open the file.
+ *
+ * Parameter: The afile instance
+ * Returns:   0 = success, non-zero = errno value from the failed operation
+ */
+/*
+ * afile_close
+ *
+ * Close the file.
+ *
+ * Parameter: The afile instance
+ * Returns:   0 = success, non-zero = errno value from the failed operation
+ */
+getcmt getcmt(): 100 lines in 0 seconds.
+/*
+ * afile_free
+ *
+ * Free the memory allocated for the file.
+ *
+ * Parameter: The afile instance
+ */
+/*
+ * afile_process_lines
+ *
+ * Process all lines from a file.
+ *
+ * Read lines from a file and call the specified function to process each line.
+ *
+ * We have to use an intermediate buffer to read the bytes of the file into.
+ * It is not possible to know the length of the strings being read, so the
+ * intermediate buffer is allocated to be the size of the file buffer.  This
+ * is much larger than necessary.  There is room here for adjustment.  Perhaps
+ * 1/4th the size, or some other fraction, can be used.
+ *
+ * Parameter: An open file
+ * Parameter: A pointer to a function that will process one line of text
+ * Returns:   The number of lines processed
+ */
+/*
+ * afile_process_matching_lines
+ *
+ * Process matching lines from a file.
+ *
+ * Read lines from a file and call the specified function to process each line.
+ *
+ * Parameter: An open file
+ * Parameter: A pointer to a function that will match one line of text
+ * Parameter: A pointer to a function that will process one line of text
+ * Returns:   The number of lines processed
+ */
+getcmt getcmt(): 100 lines in 0 seconds.
+/*
+ * afile_print
+ *
+ * Print an afile instance in labeled string format.
+ */
+/*
+ * afile_print_struct
+ * 
+ * Print an afile structure.
+ * Label: NNNNNNNNN\n
+ */
+		               // Guess at the length of the
+
+getcmt getcmt(): 0 seconds outside of comments.
+getcmt getcmt(): 0 seconds inside of comments.
+getcmt getcmt(): 0 seconds total.
+getcmt getcmt(): 0 hours, 0 minutes, 0 seconds.
+getcmt getcmt(): 359 lines.
+getcmt getcmt(): inf lines per second.
+
+getcmt main(): Total elapsed time: 0 seconds.
+

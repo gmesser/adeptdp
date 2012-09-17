@@ -1,0 +1,443 @@
+
+// astr.c - Adept String
+/*
+ * An astr instance is optimized for comparisons.  It maintains a simple
+ * integer checksum that it uses to quickly detect when strings do not match.
+ * It accumulates the integer checksum while the instance is being created.
+ * This is fast, and accumulating the checksum does not slow down creation too
+ * much.  A hash would have been even better at detecting non-matches, with
+ * less false matches, but it takes longer to calculate the hash during
+ * creation and would still require a full comparison to verify that the
+ * strings are a real match when the hashes match.
+ */
+/*
+ * astr_create_empty
+ *
+ * Create an empty new astr instance.
+ *
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_copy
+ *
+ * Create a new astr instance that is copied from an existing astr instance.
+ *
+ * Parameter: The source astr instance
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_create
+ *
+ * Create a new astr instance with contents from a string.
+ * 
+ * Parameter: The source null-terminated string
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_create_from_buffer
+ *
+ * Create a new astr instance with contents from a buffer.
+ *
+ * Parameter: The source buffer
+ * Parameter: The length of the source buffer
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_set
+ *
+ * (Re)initialize an astr instance with contents from a string.
+ *
+ * Parameter: The astr instance to be reinitialized
+ * Parameter: The source null-terminated string
+ * Returns:   Pointer to the astr instance
+ */
+getcmt getcmt(): 100 lines in 0 seconds.
+/*
+ * astr_set_from_buffer
+ *
+ * (Re)initialize an astr instance with contents from a buffer.
+ *
+ * The string will be right-filled with spaces to the length specified if needed.
+ *
+ * Parameter: The astr instance to be reinitialized
+ * Parameter: The source buffer
+ * Parameter: The length of the source buffer
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_append
+ *
+ * Append a string to an astr instance.
+ *
+ * Parameter: The astr instance to be appended to
+ * Parameter: The source null-terminated string to be appended
+ * Returns:   Pointer to the astr instance
+ */
+getcmt getcmt(): 100 lines in 0 seconds.
+/*
+ * astr_append_buffer
+ *
+ * Append a buffer to an astr instance.
+ *
+ * The string will be right-filled with spaces to the length specified if needed.
+ *
+ * Parameter: The astr instance to be reinitialized
+ * Parameter: The source buffer
+ * Parameter: The length of the source buffer
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_allocate_string
+ *
+ * Allocate the string member of an astr instance.
+ *
+ * Parameter: The astr instance
+ * Parameter: The length of the string member
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_reallocate_string
+ *
+ * Reallocate the string member of an astr instance.
+ *
+ * Parameter: The astr instance
+ * Parameter: The new length of the string member
+ * Returns:   Pointer to the astr instance
+ */
+getcmt getcmt(): 100 lines in 0 seconds.
+/*
+ * astr_clear
+ *
+ * Clear an astr instance.
+ * Keep the storage allocation, set the other members to zero.
+ *
+ * Parameter: The astr instance
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_free_string
+ *
+ * Free the string member of an astr instance.
+ * Free the storage allocation, set all members to zero.
+ *
+ * Parameter: The astr instance
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_free
+ *
+ * Free an astr instance.
+ * Frees the allocated memory for the string member, then frees the memory for
+ * the astr instance itself.
+ *
+ * Parameter: The astr instance
+ * Returns:   NULL pointer
+ */
+// astr_compare.c - Adept String
+/*
+ * astr_equals
+ *
+ * Determine if two astr instances are equal.
+ *
+ * Quickly determines if they are NOT equal by comparing the checksums.
+ * If the checksums do not match, the strings are not equal.  One integer
+ * comparison quickly detects if the strings are not equal.
+ * If the checksums match, do the full comparison to confirm equality.
+ *
+ * Parameter: The first astr instance
+ * Parameter: The second astr instance
+ * Returns:   1 if equal, 0 if not
+ */
+getcmt getcmt(): 100 lines in 0 seconds.
+/*
+ * astr_prefix_equals
+ *
+ * Determine if the prefixes of two astr instances are equal.
+ *
+ * Parameter: The first astr instance
+ * Parameter: The second astr instance
+ * Parameter: The number of prefix characters to compare
+ * Returns:   1 if equal, 0 if not
+ */
+/*
+ * astr_less_than
+ *
+ * Determine if one astr instance is less than another.
+ *
+ * Convenience method.
+ *
+ * Parameter: The first astr instance
+ * Parameter: The second astr instance
+ * Returns:   1 if as1<as2, 0 if not
+ */
+/*
+ * astr_greater_than
+ *
+ * Determine if one astr instance is greater than another.
+ *
+ * Convenience method.
+ *
+ * Parameter: The first astr instance
+ * Parameter: The second astr instance
+ * Returns:   1 if as1>as2, 0 if not
+ */
+/*
+ * astr_compare
+ *
+ * Compare two astr instances.
+ * A simple wrapper around strcmp();
+ *
+ * If one instance pointer is null and the other isn't, or
+ * if the string in one instance is null and the other isn't,
+ * the null instance or string is reported to be less than the non-null.
+ * Two null instance pointers, or two instances with null strings, are equal.
+ *
+ * Parameter: The first astr instance
+ * Parameter: The second astr instance
+ * Returns:   <0 if as1<as2, 0 if as1==as2, >0 if as1>as2
+ * See also:  strcmp()
+ */
+/*
+ * astr_prefix_compare
+getcmt getcmt(): 100 lines in 0 seconds.
+ *
+ * Compare the first n characters of two astr instances.
+ * A simple wrapper around strncmp();
+ *
+ * If one instance pointer is null and the other isn't, or
+ * if the string in one instance is null and the other isn't,
+ * the null instance or string is reported to be less than the non-null.
+ * Two null instance pointers, or two instances with null strings, are equal.
+ *
+ * Parameter: The first astr instance
+ * Parameter: The second astr instance
+ * Parameter: The number of prefix characters to compare
+ * Returns:   <0 if as1<as2, 0 if as1==as2, >0 if as1>as2
+ * See also:  strncmp()
+ */
+// astr_conversions.c - Adept String
+/*
+ * Functions to convert the contents of an astr instance to a numeric value in
+ * the safest way, insofar as they detect when there are characters in the
+ * value that are not numeric.  
+ * Note that these functions set the global errno if there is a problem
+ * converting the value.
+ */
+/*
+ * astr_to_long
+ *
+ * Convert the astr instance string to a long.
+ *
+ * Parameter: The astr instance to be evaluated
+ * Errno:     EINVAL if the string is an invalid number
+ *            EDOM if the string is NULL or empty
+ *            0 if the string was successfully evaluated
+ * Returns:   The evaluated long value of the string
+ */
+/*
+ * astr_to_double
+ *
+ * Convert the astr instance string to a double.
+ *
+ * Parameter: The astr instance to be evaluated
+ * Errno:     EINVAL if the string is an invalid number
+getcmt getcmt(): 100 lines in 0 seconds.
+ *            EDOM if the string is NULL or empty
+ *            0 if the string was successfully evaluated
+ * Returns:   The evaluated long value of the string
+ */
+// astr_edits.c - Adept String
+/*
+ * These functions edit the contents of an astr instance.
+ */
+/*
+ * astr_to_upper_case
+ *
+ * Convert all of the characters in the astr string to upper case.
+ *
+ * Parameter: The astr instance to be edited
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_to_lower_case
+ *
+ * Convert all of the characters in the astr string to lower case.
+ *
+ * Parameter: The astr instance to be edited
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_to_mixed_case
+ *
+ * Convert all of the characters in the astr string to mixed case.
+ * The initial letter of each word will be upper case,
+ * the rest of the characters in each word will be lower case.
+ * A word is considered to be a series of characters where each character
+ * satisfies the standard isalnum() test;
+ *
+ * Parameter: The astr instance to be edited
+ * Returns:   Pointer to the astr instance
+ */
+getcmt getcmt(): 100 lines in 0 seconds.
+/*
+ * astr_left_trim
+ *
+ * Trim the left (leading) spaces of the astr string.
+ *
+ * Parameter: The astr instance to be edited
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_right_trim
+ *
+ * Trim the right (trailing) spaces of the astr string.
+ *
+ * Parameter: The astr instance to be edited
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_trim
+ *
+ * Trim the left and right spaces of the astr string.
+ *
+ * Parameter: The astr instance to be edited
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_pack
+ *
+ * Replace multiple space characters in the astr string with one space character.
+ *
+ * Parameter: The astr instance to be edited
+ * Returns:   Pointer to the astr instance
+ */
+getcmt getcmt(): 100 lines in 0 seconds.
+/*
+ * astr_clean
+ *
+ * Trim and pack the spaces in the astr string.
+ *
+ * Parameter: The astr instance to be edited
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_not_empty
+ *
+ * Make sure the astr string is not empty (or NULL), use space for the single character.
+ *
+ * Parameter: The astr instance to be edited
+ * Returns:   Pointer to the astr instance
+ */
+/*
+ * astr_not_empty_char
+ * 
+ * Make sure the astr string is not empty (or NULL), use the specified single character.
+ *
+ * Parameter: The astr instance to be edited
+ * Parameter: The character to use as the sole character if necessary
+ * Returns:   Pointer to the astr instance
+ */
+// astr_utilities.c - Adept String
+/*
+ * General-purpose utility functions.
+ */
+/*
+ * astr_calc_checksum
+ *
+ * Calculate the checksum for an astr instance.
+ *
+ * Parameter: The astr instance
+ * Returns:	  The checksum of the string in an astr instance.
+ */
+getcmt getcmt(): 100 lines in 0 seconds.
+/*
+ * astr_print
+ *
+ * Print an astr instance in labeled string format.
+ */
+/*
+ * astr_print_string
+ *
+ * Print the string in an astr instance.
+ */
+/*
+ * astr_print_struct
+ *
+ * Print an astr structure.
+ * Label: NNNNNNNNN\n
+ */
+/*
+ * astr_hexdump
+ *
+ * Dump an astr instance in hex dump format.
+ * This function dumps the structure and the string.
+ *
+ * Parameter: The astr instance
+ * Returns:	  The address of the null-terminated destination buffer.
+ */
+getcmt getcmt(): 100 lines in 0 seconds.
+/*
+ * astr_hexdump_string
+ *
+ * Dump the string in an astr instance in hex dump format.
+ *
+ * Parameter: The astr instance
+ * Returns:	  The address of the null-terminated destination buffer.
+ */
+		// Calculate the size of the buffer required to hold the hex dump.
+		// Allocate the buffer to hold the hex dump.
+		// If the allocation worked, write the hex dump into the input buffer.
+/*
+ * astr_hexdump_struct
+ *
+ * Dump an astr structure instance in hex dump format.
+ *
+ * Parameter: The astr instance
+ * Returns:	  The address of the null-terminated destination buffer.
+ */
+		// Calculate the size of the buffer required to hold the hex dump.
+		// Allocate the buffer to hold the hex dump.
+		// If the allocation worked, write the hex dump into the input buffer.
+/*
+ * dump_buffer
+ *
+ * Dump a buffer.
+ *
+ * This function dumps a buffer in the familiar dump format of DEBUG,
+ * with 16 hexadecimal values per line on the left and 16 ASCII
+ * characters per line on the right.  Unprintable ASCII characters show
+ * as '.'.
+ *
+ * The destination buffer must be large enough to contain the dumped
+ * bytes.  The size of the destination buffer can be found using the
+ * following equation:
+ *
+ * 			(74 * ((buflen / 16) + (buflen % 16))) + 1
+ *
+ * Output:
+ *
+ * 00000  41 20 6C 6F 6E 67 20 73 74 72 69 6E 67 20 74 68  A long string th
+ * 00010  61 74 20 69 73 20 6D 75 63 68 20 6C 6F 6E 67 CC  at is much long.
+ * ----=----1----=----2----=----3----=----4----=----5----=----6----=----7----=
+ *                                           Buffer with LF eol ends at 73 ^
+ *                                         Buffer with CR/LF eol ends at 74 ^
+ *
+ * Parameter: dst    - address of the destination buffer
+ * Parameter: dstlen - length of the destination buffer
+ * Parameter: src     - address of the buffer to be dumped
+ * Parameter: srclen  - length of the buffer to be dumped
+ * Returns:	  The address of the null-terminated destination buffer.
+ * ------------------------------------------------------------------------------
+ */
+getcmt getcmt(): 100 lines in 0 seconds.
+		// Dump sixteen bytes on this line...
+
+getcmt getcmt(): 0 seconds outside of comments.
+getcmt getcmt(): 0 seconds inside of comments.
+getcmt getcmt(): 0 seconds total.
+getcmt getcmt(): 0 hours, 0 minutes, 0 seconds.
+getcmt getcmt(): 1191 lines.
+getcmt getcmt(): inf lines per second.
+
+getcmt main(): Total elapsed time: 0 seconds.
+
