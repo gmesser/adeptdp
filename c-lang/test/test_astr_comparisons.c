@@ -55,8 +55,8 @@ void test_prefix_equals(void) {
 void test_compare(void) {
 	char *abc = "ABC";
 	char *xyz = "XYZ";
-	astr *as1;
-	astr *as2;
+	astr *as1 = NULL;
+	astr *as2 = NULL;
 
 	as1 = astr_set(as1, abc);
 	as2 = astr_set(as2, xyz);
@@ -87,8 +87,8 @@ void test_prefix_compare(void) {
 	char *abcabc = "ABCABC";
 	char *abcxyz = "ABCXYZ";
 	char *xyzxyz = "XYZXYZ";
-	astr *as1;
-	astr *as2;
+	astr *as1 = NULL;
+	astr *as2 = NULL;
 
 	as1 = astr_set(as1, abcabc);
 	as2 = astr_set(as2, xyzxyz);
@@ -109,8 +109,8 @@ void test_prefix_compare(void) {
 void test_less_than(void) {
 	char *abc = "ABC";
 	char *xyz = "XYZ";
-	astr *as1;
-	astr *as2;
+	astr *as1 = NULL;
+	astr *as2 = NULL;
 
 	as1 = astr_set(as1, abc);
 	as2 = astr_set(as2, xyz);
@@ -131,8 +131,8 @@ void test_less_than(void) {
 void test_greater_than(void) {
 	char *abc = "ABC";
 	char *xyz = "XYZ";
-	astr *as1;
-	astr *as2;
+	astr *as1 = NULL;
+	astr *as2 = NULL;
 
 	as1 = astr_set(as1, abc);
 	as2 = astr_set(as2, xyz);
