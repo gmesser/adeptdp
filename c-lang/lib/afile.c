@@ -70,6 +70,7 @@ afile *afile_create_explicit(astr *filespec, astr *open_modes, size_t buffer_siz
  *
  * This can only be set before the file is opened.
  *
+ * Parameter: The afile instance
  * Parameter: The file specification (optional path, file name)
  */
 void afile_set_filespec(afile *af, astr *filespec) {
@@ -87,6 +88,7 @@ void afile_set_filespec(afile *af, astr *filespec) {
  *
  * This can only be set before the file is opened.
  *
+ * Parameter: The afile instance
  * Parameter: The file open modes
  */
 void afile_set_open_modes(afile *af, astr *open_modes) {
@@ -107,6 +109,7 @@ void afile_set_open_modes(afile *af, astr *open_modes) {
  *
  * This can only be set before the file is opened.
  *
+ * Parameter: The afile instance
  * Parameter: The file buffering mode
  */
 void afile_set_buffering_mode(afile *af, int buffering_mode) {
@@ -127,6 +130,7 @@ void afile_set_buffering_mode(afile *af, int buffering_mode) {
  *
  * This can only be set before the file is opened.
  *
+ * Parameter: The afile instance
  * Parameter: The file buffer size
  */
 void afile_set_buffer_size(afile *af, size_t size) {
@@ -137,6 +141,47 @@ void afile_set_buffer_size(afile *af, size_t size) {
 		else {
 			af->buffer_size = default_buffer_size;
 		}
+	}
+}
+
+/*
+ * afile_stat
+ *
+ * Stat an afile.
+ *
+ * Parameter: The afile instance
+ * Returns:   0 = success, non-zero = errno value from the failed operation
+ */
+int afile_stat(afile *af) {
+	int result = 0;
+
+	if (af != NULL && af->filespec != NULL) {
+		result = stat(af->filespec->string, &(af->stats));
+		if(result == -1) {
+			result = errno;
+		} 	
+	}
+	
+	return result;
+}
+
+/*
+ * afile_exists
+ *
+ * Determiine if an afile exists.
+ *
+ * Parameter: The afile instance
+ * Returns:   0 = file does not exist, 1 = file exists.
+ */
+int afile_exists(afile *af) {
+	int result = 0;
+
+	result = afile_stat(af);
+	if (result == ENOENT) {
+		return 0;
+	}
+	else {
+		return 1;
 	}
 }
 
@@ -255,7 +300,7 @@ afile *afile_free(afile *af) {
  * is much larger than necessary.  There is room here for adjustment.  Perhaps
  * 1/4th the size, or some other fraction, can be used.
  *
- * Parameter: An open file
+ * Parameter: The afile instance, opened
  * Parameter: A pointer to a function that will process one line of text
  * Returns:   The number of lines processed
  */
@@ -283,7 +328,7 @@ int afile_process_lines(afile *af, int (*process)(astr *as)) {
  *
  * Read lines from a file and call the specified function to process each line.
  *
- * Parameter: An open file
+ * Parameter: The afile instance, opened
  * Parameter: A pointer to a function that will match one line of text
  * Parameter: A pointer to a function that will process one line of text
  * Returns:   The number of lines processed
@@ -315,6 +360,8 @@ int afile_process_matching_lines(afile *af, int (*match)(astr *as), int (*proces
  * afile_print
  *
  * Print an afile instance in labeled string format.
+ *
+ * Parameter: The afile instance
  */
 char *afile_print(const afile *af) {
 	char *struct_print;
@@ -337,6 +384,8 @@ char *afile_print(const afile *af) {
  * 
  * Print an afile structure.
  * Label: NNNNNNNNN\n
+ *
+ * Parameter: The afile instance
  */
 char *afile_print_struct(const afile *af) {
 	char *lbl_filespec       = "filespec:       ";

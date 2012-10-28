@@ -4,6 +4,7 @@
 #define	AFILE_H_INCLUDED
 
 #include <stdio.h>
+#include <sys/stat.h>
 
 #include "astr.h"
 
@@ -30,6 +31,7 @@ typedef struct afile {
 	size_t buffer_size;
 	char *buffer;
 	FILE *file;
+	struct stat stats;
 } afile;
 
 #ifdef	__cplusplus
@@ -46,6 +48,12 @@ afile *afile_create(astr *filespec, astr *open_modes);
 // Create an afile instance with the attributes explicitly specified.
 afile *afile_create_explicit(astr *filespec, astr *open_modes, size_t buffer_size, int buffering_mode);
 
+// Create an afile instance for a temporary file with default attributes.
+afile *afile_create_temp(astr *open_modes);
+
+// Create an afile instance for a temporary file with the attributes explicitly specified.
+afile *afile_create_temp_explicit(astr *open_modes, size_t buffer_size, int buffering_mode);
+
 // Set the afile filespec.
 void afile_set_filespec(afile *af, astr *filespec);
 
@@ -57,6 +65,12 @@ void afile_set_buffering_mode(afile *af, int buffering_mode);
 
 // Set the afile buffer size.
 void afile_set_buffer_size(afile *af, size_t size);
+
+// Stat the file.
+int afile_stat(afile *af);
+
+// Determine if the file exists.
+int afile_exists(afile *af);
 
 // Open the afile.
 int afile_open(afile *af);

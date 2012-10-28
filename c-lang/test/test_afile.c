@@ -86,6 +86,44 @@ void test_create_file(void) {
 	astr_free(open_modes);
 }
 
+void test_file_exists(void) {
+	char *name = "test_file_exists.tmp";
+	char *modes = "a";
+	astr *filename;
+	astr *open_modes;
+	afile *af;
+	int result;
+
+	filename = astr_create(name);
+	aut_assert("1 test_file_exists", strcmp(filename->string, name) == 0);
+
+	open_modes = astr_create(modes);
+	aut_assert("2 test_file_exists", strcmp(open_modes->string, modes) == 0);
+
+	af = afile_create_explicit(filename, open_modes, 0, -1);
+	aut_assert("3 test_file_exists", strcmp(af->filespec->string, name) == 0);
+
+	result = afile_exists(af);
+	aut_assert("4 test_file_exists", result == 0);
+
+	result = afile_open(af);
+	aut_assert("5 test_file_exists", result == 0);
+
+	result = afile_exists(af);
+	aut_assert("6 test_file_exists", result == 1);
+
+	result = afile_close(af);
+	aut_assert("7 test_file_exists", result == 0);
+
+	af = afile_free(af);
+	aut_assert("8 test_file_exists", af == NULL);
+
+	unlink(name);
+
+	astr_free(filename);
+	astr_free(open_modes);
+}
+
 void test_write(void) {
 	char *name = "test_write.tmp";
 	char *modes = "a";
@@ -198,6 +236,7 @@ int main(int argc, char *argv[]) {
 	aut_run_test(test_astr_creation);
 	aut_run_test(test_afile_creation);
 	aut_run_test(test_create_file);
+	aut_run_test(test_file_exists);
 	aut_run_test(test_write);
 	aut_run_test(test_process_lines);
 	aut_report();
