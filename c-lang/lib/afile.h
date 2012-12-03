@@ -1,7 +1,7 @@
 // afile.h - Adept file handling
 
 #ifndef AFILE_H_INCLUDED
-#define	AFILE_H_INCLUDED
+#define AFILE_H_INCLUDED
 
 #include <stdio.h>
 #include <sys/stat.h>
