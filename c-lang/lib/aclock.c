@@ -51,7 +51,7 @@ double ac_current_time() {
 	mach_timebase_info_data_t info;
 	mach_timebase_info(&info);
 
-	double conv_factor = (static_cast<double>(info.numer)) / (static_cast<double>(info.denom));
+	double conv_factor = (double)info.numer / (double)info.denom;
 	ct = mach_absolute_time() * conv_factor * 1.0e-9;
 
 #endif // #ifdef __MACH__
