@@ -1,4 +1,7 @@
-bin_PROGRAMS = test_afile test_afile_process test_astr test_astr_classifications test_astr_comparisons test_astr_conversions test_astr_edits test_astr_utilities
+bin_PROGRAMS = test_aclock test_afile test_afile_process test_astr test_astr_classifications test_astr_comparisons test_astr_conversions test_astr_edits test_astr_utilities
+test_aclock_SOURCES = test_aclock.c
+test_aclock_LDADD = $(top_builddir)/c-lang/lib/libadeptdp.a
+test_aclock_CPPFLAGS = -I $(top_srcdir)/c-lang/lib
 test_afile_SOURCES = test_afile.c
 test_afile_LDADD = $(top_builddir)/c-lang/lib/libadeptdp.a
 test_afile_CPPFLAGS = -I $(top_srcdir)/c-lang/lib
