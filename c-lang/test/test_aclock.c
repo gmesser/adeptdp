@@ -57,8 +57,8 @@ void test_aclock_elapsed(void) {
 	ac1 = aclock_create();
 	aut_assert("1 test_aclock_elapsed", ac1->stopped == 0.0);
 	aut_assert("2 test_aclock_elapsed", ac1->elapsed == 0.0);
-	printf("ac1 test_aclock_elapsed\n");
-	aclock_print(ac1);
+//	printf("ac1 test_aclock_elapsed\n");
+//	aclock_print(ac1);
 
 	ac2 = aclock_create();
 	aut_assert("3 test_aclock_elapsed", ac2->stopped == 0.0);
@@ -69,8 +69,8 @@ void test_aclock_elapsed(void) {
 	aclock_elapsed(ac1);
 	aut_assert("5 test_aclock_elapsed", ac1->stopped == 0.0);
 	aut_assert("6 test_aclock_elapsed", ac1->elapsed > 0.0);
-	printf("ac1 test_aclock_elapsed\n");
-	aclock_print(ac1);
+//	printf("ac1 test_aclock_elapsed\n");
+//	aclock_print(ac1);
 
 	// No change to ac2.
 	aut_assert("7 test_aclock_elapsed", ac2->stopped == 0.0);
@@ -97,8 +97,8 @@ void test_aclock_loop(void) {
 	aut_assert("5 test_aclock_loop", r > 0.0);
 	aut_assert("6 test_aclock_loop", ac1->lastloop > 0.0);
 	aut_assert("7 test_aclock_loop", ac1->elapsed == 0.0);
-	printf("ac1 test_aclock_loop\n");
-	aclock_print(ac1);
+//	printf("ac1 test_aclock_loop\n");
+//	aclock_print(ac1);
 
 	spend_time();
 
@@ -107,9 +107,9 @@ void test_aclock_loop(void) {
 	aut_assert("9 test_aclock_loop", r > 0.0);
 	aut_assert("10 test_aclock_loop", ac1->lastloop > 0.0);
 	aut_assert("11 test_aclock_loop", ac1->elapsed == 0.0);
-	printf("ac1 test_aclock_loop\n");
-	printf("Returned from loop() = %4.9g\n", r);
-	aclock_print(ac1);
+//	printf("ac1 test_aclock_loop\n");
+//	printf("Returned from loop() = %4.9g\n", r);
+//	aclock_print(ac1);
 
 	spend_time();
 	spend_time();
@@ -122,9 +122,9 @@ void test_aclock_loop(void) {
 	aut_assert("15 test_aclock_loop", r != ac1->lastloop);
 	aut_assert("16 test_aclock_loop", r != ll);
 	aut_assert("17 test_aclock_loop", ac1->elapsed == 0.0);
-	printf("ac1 test_aclock_loop\n");
-	printf("Returned from check_loop() = %4.9g\n", r);
-	aclock_print(ac1);
+//	printf("ac1 test_aclock_loop\n");
+//	printf("Returned from check_loop() = %4.9g\n", r);
+//	aclock_print(ac1);
 
 	aclock_free(ac1);
 }
@@ -146,16 +146,16 @@ void test_aclock_reset(void) {
 	aut_assert("5 test_aclock_reset", r > 0.0);
 	aut_assert("6 test_aclock_reset", ac1->lastloop > 0.0);
 	aut_assert("7 test_aclock_reset", ac1->elapsed == 0.0);
-	printf("ac1 test_aclock_reset\n");
-	aclock_print(ac1);
+//	printf("ac1 test_aclock_reset\n");
+//	aclock_print(ac1);
 
 	r = aclock_reset(ac1);
 	aut_assert("8 test_aclock_reset", ac1->started > 0.0);
 	aut_assert("9 test_aclock_reset", ac1->stopped == ac1->started);
 	aut_assert("10 test_aclock_reset", ac1->lastloop == ac1->started);
 	aut_assert("11 test_aclock_reset", ac1->elapsed == 0.0);
-	printf("ac1 test_aclock_reset\n");
-	aclock_print(ac1);
+//	printf("ac1 test_aclock_reset\n");
+//	aclock_print(ac1);
 
 	aclock_free(ac1);
 }

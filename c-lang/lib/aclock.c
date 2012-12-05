@@ -34,7 +34,6 @@ double aclock_diff(double start, double end) {
  * Returns: the current CPU clock (normally in milliseconds)
  */
 double aclock_current_time() {
-
 	clock_t ct = clock();
 	return ct / (double) CLOCKS_PER_SEC;
 }
@@ -65,8 +64,6 @@ aclock *aclock_free(aclock *ac) {
 	if(ac != NULL) {
 		free(ac);
 	}
-
-	return NULL;
 }
 
 /*
