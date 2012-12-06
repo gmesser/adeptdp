@@ -666,4 +666,165 @@ Method Documentation
 		Print an afile structure.
 		Label: NNNNNNNNN\n
  
+	------------------------------
+	aclock.c - Adept Clock
 
+		-----
+		aclock_diff
+
+		Calculate the difference between two time values.
+
+		Parameter: The start time
+		Parameter: The end time
+		Returns: The difference in secods between the two times
+
+
+		-----
+		aclock_current_time
+
+		Get the current CPU clock in seconds.
+
+		This clock measures the number of CPU clock ticks used by the program.  If
+		the program calls sleep() or if the program is interrupted by the operating
+		system, those clock ticks are not included in the number of clock ticks
+		returned to the function by the clock() function.
+
+		Returns: The current CPU clock (system-dependent, normally in milliseconds)
+
+
+		-----
+		aclock_create
+
+		Create an aclock structure and start it.
+
+		Returns: A new, running, aclock instance
+
+
+		-----
+		aclock_free
+
+		Free an aclock structure
+
+		Parameter: The aclock instance
+		Returns: NULL pointer
+
+
+		-----
+		aclock_init
+
+		Initialize the members of a clock structure.
+
+		Parameter: The aclock instance
+		Returns: The current elapsed time
+
+
+		-----
+		aclock_restart
+
+		Restart a clock.
+
+		Parameter: The aclock instance
+		Returns: The current elapsed time
+
+
+		-----
+		aclock_start
+
+		Either start the clock
+		at the current time or restarts the
+		clock at 0.0.
+
+		Calling aclock_start() while the clock is
+		running restarts it at 0.0.
+
+		Calling aclock_start() while the clock is
+		stopped effectively restarts it at the
+		current time by adjusting the start
+		and lastlap times by the amount of time
+		that the clock was stopped.
+
+		Parameter: The aclock instance
+		Returns: The current elapsed time
+
+
+		-----
+		aclock_stop
+
+		Record the time when the
+		clock is stopped.  When stopped,
+		the recorded value is used in the elapsed
+		time calculation.  The clock
+		remains stopped until the aclock_start()
+		function is called to restart it.
+
+		Parameter: The aclock instance
+		Returns: The current elapsed time
+
+
+		-----
+		aclock_reset
+
+		Stop the clock and initialize all times to the
+		current time.
+		The aclock_start() function must be called to
+		restart it.
+
+		Parameter: The aclock instance
+		Returns: The current elapsed time
+
+
+		-----
+		aclock_loop
+
+		Calculate the number of seconds
+		since loop() was last called
+		Reset the loop timer to zero.
+
+		Parameter: The aclock instance
+		Returns: The number of seconds since loop() was last called
+
+
+		-----
+		checkloop
+
+		Calculate the number of seconds
+		since loop() was last called.
+		Does not reset the loop timer.
+
+		Parameter: The aclock instance
+		Returns: The number of seconds since loop() was last called
+
+
+		-----
+		aclock_elapsed
+
+		Calculate the elapsed time in
+		seconds that the clock has been
+		running.
+
+		Parameter: The aclock instance
+		Returns: The current elapsed time
+
+
+		-----
+		aclock_isstopped
+
+		Indicate if the clock is currently stopped.
+
+		Parameter: The aclock instance
+		Return: Non-zero if the clock is stopped, and zero if it is running
+
+
+		-----
+		aclock_elapsedDHMS
+
+		Break out the elapsed time into days,
+		hours, minutes, and seconds.  Those
+		are returned in the passed parameters.
+
+		Parameter: The elapsed time
+		Parameter: A pointer to a double to store the number of days of elapsed time
+		Parameter: A pointer to a double to store the number of hours of elapsed time in the days
+		Parameter: A pointer to a double to store the number of minutes of elapsed time in the hour
+		Parameter: A pointer to a double to store the number of seconds of elapsed time in the minute
+		Returns: The passed-in elapsed time

@@ -1,4 +1,8 @@
-// aclock.c
+// aclock.c - Adept Clock
+
+/*
+ * Clock stopwatch functions.
+ */
 
 #include <time.h>
 #include <math.h>
@@ -6,16 +10,14 @@
 #include <stdio.h>
 #include "aclock.h"
 
-#ifdef __MACH__
-#include <mach/mach_time.h>
-#endif // #ifdef __MACH__
-
 /*
  * aclock_diff
  *
  * Calculate the difference between two time values.
  *
- * Returns: the difference between the two times
+ * Parameter: The start time
+ * Parameter: The end time
+ * Returns: The difference in secods between the two times
  */
 double aclock_diff(double start, double end) {
 	return(end - start);
@@ -31,7 +33,7 @@ double aclock_diff(double start, double end) {
  * system, those clock ticks are not included in the number of clock ticks
  * returned to the function by the clock() function.
  *
- * Returns: the current CPU clock (normally in milliseconds)
+ * Returns: The current CPU clock (system-dependent, normally in milliseconds)
  */
 double aclock_current_time() {
 	clock_t ct = clock();
@@ -43,7 +45,7 @@ double aclock_current_time() {
  *
  * Create an aclock structure and start it.
  *
- * Returns: a new, running, aclock instance
+ * Returns: A new, running, aclock instance
  */
 aclock *aclock_create() {
 	aclock *ac = malloc(sizeof(aclock));
@@ -63,18 +65,24 @@ aclock *aclock_create() {
  *
  * Free an aclock structure
  *
+ * Parameter: The aclock instance
  * Returns: NULL pointer
  */
 aclock *aclock_free(aclock *ac) {
 	if(ac != NULL) {
 		free(ac);
 	}
+
+	return NULL;
 }
 
 /*
  * aclock_init
  *
  * Initialize the members of a clock structure.
+ *
+ * Parameter: The aclock instance
+ * Returns: The current elapsed time
  */
 double aclock_init(aclock *ac) {
 	if (ac == NULL) {
@@ -94,6 +102,9 @@ double aclock_init(aclock *ac) {
  * aclock_restart
  *
  * Restart a clock.
+ *
+ * Parameter: The aclock instance
+ * Returns: The current elapsed time
  */
 double aclock_restart(aclock *ac) {
 	if (ac == NULL) {
@@ -125,7 +136,8 @@ double aclock_restart(aclock *ac) {
  * and lastlap times by the amount of time
  * that the clock was stopped.
  *
- * Returns: current elapsed time
+ * Parameter: The aclock instance
+ * Returns: The current elapsed time
  */
 double aclock_start(aclock *ac) {
 	if (ac == NULL) {
@@ -152,7 +164,8 @@ double aclock_start(aclock *ac) {
  * remains stopped until the aclock_start()
  * function is called to restart it.
  *
- * Returns: current elapsed time
+ * Parameter: The aclock instance
+ * Returns: The current elapsed time
  */
 double aclock_stop(aclock *ac) {
 	if (ac == NULL) {
@@ -174,7 +187,8 @@ double aclock_stop(aclock *ac) {
  * The aclock_start() function must be called to
  * restart it.
  *
- * Returns: current elapsed time
+ * Parameter: The aclock instance
+ * Returns: The current elapsed time
  */
 double aclock_reset(aclock *ac) {
 	if (ac == NULL) {
@@ -194,7 +208,8 @@ double aclock_reset(aclock *ac) {
  * since loop() was last called
  * Reset the loop timer to zero.
  *
- * Returns: the number of seconds since loop() was last called
+ * Parameter: The aclock instance
+ * Returns: The number of seconds since loop() was last called
  */
 double aclock_loop(aclock *ac) {
 	if (ac == NULL) {
@@ -223,7 +238,8 @@ double aclock_loop(aclock *ac) {
  * since loop() was last called.
  * Does not reset the loop timer.
  *
- * Returns: the number of seconds since loop() was last called
+ * Parameter: The aclock instance
+ * Returns: The number of seconds since loop() was last called
  */
 double aclock_check_loop(aclock *ac) {
 	if (ac == NULL) {
@@ -250,7 +266,8 @@ double aclock_check_loop(aclock *ac) {
  * seconds that the clock has been
  * running.
  *
- * Returns: current elapsed time
+ * Parameter: The aclock instance
+ * Returns: The current elapsed time
  */
 double aclock_elapsed(aclock *ac) {
 	if (ac == NULL) {
@@ -272,7 +289,8 @@ double aclock_elapsed(aclock *ac) {
  *
  * Indicate if the clock is currently stopped.
  *
- * Return: non-zero if the clock is stopped, and zero if it is running
+ * Parameter: The aclock instance
+ * Return: Non-zero if the clock is stopped, and zero if it is running
  */
 int aclock_isstopped(aclock *ac) {
 	if (ac == NULL) {
@@ -292,7 +310,12 @@ int aclock_isstopped(aclock *ac) {
  * hours, minutes, and seconds.  Those
  * are returned in the passed parameters.
  *
- * Returns: current elapsed time
+ * Parameter: The elapsed time
+ * Parameter: A pointer to a double to store the number of days of elapsed time
+ * Parameter: A pointer to a double to store the number of hours of elapsed time in the days
+ * Parameter: A pointer to a double to store the number of minutes of elapsed time in the hour
+ * Parameter: A pointer to a double to store the number of seconds of elapsed time in the minute
+ * Returns: The passed-in elapsed time
  */
 double aclock_elapsedDHMS(double elapsed_time, double *days, double *hours, double *minutes, double *seconds) {
 	double seconds_in_day = 60.0 * 60.0 * 24.0;
