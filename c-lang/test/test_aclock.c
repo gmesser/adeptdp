@@ -160,6 +160,119 @@ void test_aclock_reset(void) {
 	aclock_free(ac1);
 }
 
+void test_aclock_stop(void) {
+	aclock *ac1;
+	double r;
+	double ll;
+
+	ac1 = aclock_create();
+	aut_assert("1 test_aclock_stop", ac1->stopped == 0.0);
+	aut_assert("2 test_aclock_stop", !(aclock_isstopped(ac1)));
+	aut_assert("3 test_aclock_stop", ac1->elapsed == 0.0);
+
+	spend_time();
+
+	r = aclock_stop(ac1);
+	aut_assert("4 test_aclock_stop", ac1->stopped > 0.0);
+	aut_assert("5 test_aclock_stop", aclock_isstopped(ac1));
+	aut_assert("6 test_aclock_stop", ac1->elapsed == r);
+//	printf("ac1 test_aclock_stop\n");
+//	aclock_print(ac1);
+
+	spend_time();
+
+	aclock_elapsed(ac1);
+	aut_assert("7 test_aclock_stop", ac1->stopped > 0.0);
+	aut_assert("8 test_aclock_stop", aclock_isstopped(ac1));
+	aut_assert("9 test_aclock_stop", ac1->elapsed == r);
+//	printf("ac1 test_aclock_stop\n");
+//	aclock_print(ac1);
+
+	aclock_free(ac1);
+}
+
+void test_aclock_start_when_stopped(void) {
+	aclock *ac1;
+	double r;
+	double ll;
+
+	ac1 = aclock_create();
+	aut_assert("1 test_aclock_start_when_stopped", ac1->stopped == 0.0);
+	aut_assert("2 test_aclock_start_when_stopped", !(aclock_isstopped(ac1)));
+	aut_assert("3 test_aclock_start_when_stopped", ac1->elapsed == 0.0);
+
+	spend_time();
+
+	r = aclock_stop(ac1);
+	aut_assert("4 test_aclock_start_when_stopped", ac1->stopped > 0.0);
+	aut_assert("5 test_aclock_start_when_stopped", aclock_isstopped(ac1));
+	aut_assert("6 test_aclock_start_when_stopped", ac1->elapsed == r);
+//	printf("ac1 test_aclock_start_when_stopped\n");
+//	aclock_print(ac1);
+
+	spend_time();
+
+	aclock_elapsed(ac1);
+	aut_assert("7 test_aclock_start_when_stopped", ac1->stopped > 0.0);
+	aut_assert("8 test_aclock_start_when_stopped", aclock_isstopped(ac1));
+	aut_assert("9 test_aclock_start_when_stopped", ac1->elapsed == r);
+//	printf("ac1 test_aclock_start_when_stopped\n");
+//	aclock_print(ac1);
+
+	aclock_start(ac1);
+	spend_time();
+
+	aclock_elapsed(ac1);
+	aut_assert("10 test_aclock_start_when_stopped", ac1->stopped == 0.0);
+	aut_assert("11 test_aclock_start_when_stopped", !(aclock_isstopped(ac1)));
+	aut_assert("12 test_aclock_start_when_stopped", ac1->elapsed > r);
+//	printf("ac1 test_aclock_start_when_stopped\n");
+//	aclock_print(ac1);
+
+	aclock_free(ac1);
+}
+
+void test_aclock_start_when_started(void) {
+	aclock *ac1;
+	double r;
+	double ll;
+
+	ac1 = aclock_create();
+	aut_assert("1 test_aclock_start_when_started", ac1->stopped == 0.0);
+	aut_assert("2 test_aclock_start_when_started", !(aclock_isstopped(ac1)));
+	aut_assert("3 test_aclock_start_when_started", ac1->elapsed == 0.0);
+
+	spend_time();
+
+	aclock_elapsed(ac1);
+	aut_assert("4 test_aclock_start_when_stopped", ac1->stopped == 0.0);
+	aut_assert("5 test_aclock_start_when_started", !(aclock_isstopped(ac1)));
+	aut_assert("6 test_aclock_start_when_stopped", ac1->elapsed > 0.0);
+//	printf("ac1 test_aclock_start_when_stopped\n");
+//	aclock_print(ac1);
+
+	spend_time();
+
+	r = aclock_start(ac1);
+	aut_assert("7 test_aclock_start_when_started", ac1->stopped == 0.0);
+	aut_assert("8 test_aclock_start_when_started", !(aclock_isstopped(ac1)));
+	aut_assert("9 test_aclock_start_when_started", r == 0.0);
+	aut_assert("10 test_aclock_start_when_started", ac1->elapsed == 0.0);
+//	printf("ac1 test_aclock_start_when_started\n");
+//	aclock_print(ac1);
+
+	spend_time();
+
+	aclock_elapsed(ac1);
+	aut_assert("11 test_aclock_start_when_started", ac1->stopped == 0.0);
+	aut_assert("12 test_aclock_start_when_started", !(aclock_isstopped(ac1)));
+	aut_assert("13 test_aclock_start_when_started", ac1->elapsed > 0.0);
+//	printf("ac1 test_aclock_start_when_started\n");
+//	aclock_print(ac1);
+
+	aclock_free(ac1);
+}
+
 // ----------
 
 int main(int argc, char *argv[]) {
@@ -168,6 +281,9 @@ int main(int argc, char *argv[]) {
 	aut_run_test(test_aclock_elapsed);
 	aut_run_test(test_aclock_loop);
 	aut_run_test(test_aclock_reset);
+	aut_run_test(test_aclock_stop);
+	aut_run_test(test_aclock_start_when_stopped);
+	aut_run_test(test_aclock_start_when_started);
 	aut_report();
 	aut_terminate_suite();
 	aut_return();

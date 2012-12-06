@@ -47,6 +47,11 @@ double aclock_current_time() {
  */
 aclock *aclock_create() {
 	aclock *ac = malloc(sizeof(aclock));
+
+	if (ac == NULL) {
+		return NULL;
+	}
+
 	aclock_reset(ac);
 	aclock_start(ac);
 	
@@ -72,6 +77,10 @@ aclock *aclock_free(aclock *ac) {
  * Initialize the members of a clock structure.
  */
 double aclock_init(aclock *ac) {
+	if (ac == NULL) {
+		return 0.0;
+	}
+
 	double ct = aclock_current_time();
 	ac->lastloop = ct;
 	ac->started = ct;
@@ -87,6 +96,10 @@ double aclock_init(aclock *ac) {
  * Restart a clock.
  */
 double aclock_restart(aclock *ac) {
+	if (ac == NULL) {
+		return 0.0;
+	}
+
 	double ct = aclock_current_time();
 	double sd = aclock_diff(ac->stopped, ct);
 	ac->started += sd;
@@ -115,6 +128,10 @@ double aclock_restart(aclock *ac) {
  * Returns: current elapsed time
  */
 double aclock_start(aclock *ac) {
+	if (ac == NULL) {
+		return 0.0;
+	}
+
 	if (ac->stopped) {
 		aclock_restart(ac);
 	}
@@ -138,6 +155,10 @@ double aclock_start(aclock *ac) {
  * Returns: current elapsed time
  */
 double aclock_stop(aclock *ac) {
+	if (ac == NULL) {
+		return 0.0;
+	}
+
 	if (!ac->stopped) {
 		ac->stopped = aclock_current_time();
 	}
@@ -156,6 +177,10 @@ double aclock_stop(aclock *ac) {
  * Returns: current elapsed time
  */
 double aclock_reset(aclock *ac) {
+	if (ac == NULL) {
+		return 0.0;
+	}
+
 	ac->lastloop = ac->started = ac->stopped = aclock_current_time();
 	ac->elapsed = 0.0;
 
@@ -172,6 +197,10 @@ double aclock_reset(aclock *ac) {
  * Returns: the number of seconds since loop() was last called
  */
 double aclock_loop(aclock *ac) {
+	if (ac == NULL) {
+		return 0.0;
+	}
+
 	double dl; // difference from last loop
 
 	if (ac->stopped) {
@@ -197,6 +226,10 @@ double aclock_loop(aclock *ac) {
  * Returns: the number of seconds since loop() was last called
  */
 double aclock_check_loop(aclock *ac) {
+	if (ac == NULL) {
+		return 0.0;
+	}
+
 	double dl; // difference from last loop
 
 	if (ac->stopped) {
@@ -220,6 +253,10 @@ double aclock_check_loop(aclock *ac) {
  * Returns: current elapsed time
  */
 double aclock_elapsed(aclock *ac) {
+	if (ac == NULL) {
+		return 0.0;
+	}
+
 	if (ac->stopped) {
 		ac->elapsed = aclock_diff(ac->started, ac->stopped);
 	}
@@ -238,6 +275,10 @@ double aclock_elapsed(aclock *ac) {
  * Return: non-zero if the clock is stopped, and zero if it is running
  */
 int aclock_isstopped(aclock *ac) {
+	if (ac == NULL) {
+		return 0.0;
+	}
+
 	if (ac->stopped)
 		return 1;
 	else
