@@ -73,6 +73,11 @@ Unit Test Programs
 		test_afile.c
 		test_afile_process.c
 
+	------------------------------
+	aclock
+
+		test_aclock.c
+
 Method Documentation
 
 	------------------------------
@@ -112,7 +117,17 @@ Method Documentation
 		Parameter: The source buffer
 		Parameter: The length of the source buffer
 		Returns:   Pointer to the astr instance
+
  
+		-----
+		astr_printf
+
+		Create a new astr instance with contents from a call to vsnprintf().
+
+		Parameter: The printf format string
+		Parameter: The argument list for printf
+		Returns:   Pointer to the astr instance
+
 
 		-----
 		astr_set

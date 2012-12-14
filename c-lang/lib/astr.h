@@ -64,6 +64,9 @@ astr *astr_create(const char *string);
 // Allocate a new astr initialized with a buffer of specified length.
 astr *astr_create_from_buffer(const char *buffer, const int length);
 
+// Allocate a new astr initialized by a call to vsnprintf.
+astr *astr_printf(const char *fmt, ...);
+
 // Reinitialize an astr with a string.
 astr *astr_set(astr *as, const char *string);
 

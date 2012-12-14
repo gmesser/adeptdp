@@ -6,10 +6,12 @@
 #include <errno.h>
 
 #include "astr.h"
+#include "aclock.h"
 #include "adept_unit_test.h"
 
 int suite_runs;
 int suite_fails;
+aclock *suite_clock;
 int test_runs;
 int test_fails;
 astr *test_messages;

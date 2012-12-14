@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include "astr.h"
+#include "aclock.h"
 
 /*
  * Based on minunit, with thanks!
@@ -16,6 +17,7 @@
  *		Continues after test failure(s). The minunit stopped on the first failure.
  *		Counts test cases, passes, and failures.
  *		Uses an astr instance to store the failure message(s) for the report.
+ *		Uses an aclock instance to time the suite.
  *		Reports the result of the test suite.
  *
  * USAGE - 
@@ -23,13 +25,15 @@
  * Put the following at global scope somewhere, accessible from each test 
  * function in the source file:
  * 
- *   int suite_runs;
- *   int suite_fails;
- *   int test_runs;
- *   int test_fails;
- *   astr *test_messages;
+ *		int suite_runs;
+ *		int suite_fails;
+ *		aclock *suite_clock;
+ *		int test_runs;
+ *		int test_fails;
+ *		astr *test_messages;
  * 
- * Put the following in a function that returns int:
+ * Put something like the following in a function that returns int to
+ * run all the tests:
  *
  *   aut_initialize_suite();
  *	  aut_run_test(test_func1); // Call the aut_run_test macro to run a function.
@@ -41,7 +45,7 @@
  */
 
 // Initialize a test suite.
-#define aut_initialize_suite() do { suite_runs = 0; suite_fails = 0; test_messages = astr_create_empty(); } while (0)
+#define aut_initialize_suite() do { suite_runs = 0; suite_fails = 0; suite_clock = aclock_create(); test_messages = astr_create_empty(); } while (0)
 
 // Run a test case and handle the result.
 #define aut_run_test(test) do { test_runs = 0; test_fails = 0; \
@@ -53,13 +57,13 @@
 
 // Report on a test suite.
 #define aut_report() do { \
-	if (suite_fails > 0) { printf("%40s: Pass: %d/%d %3.1f  Fail: %d/%d %3.1f\n", __FILE__, \
+	if (suite_fails > 0) { printf("%40s:  Pass: %d/%d %3.1f  Fail: %d/%d %3.1f  Elapsed: %.4g\n", __FILE__, \
 		suite_runs - suite_fails, suite_runs, ((suite_runs - suite_fails) / (float) suite_runs) * 100, \
-		suite_fails, suite_runs, (suite_fails / (float) suite_runs) * 100); } \
-	else { printf("%40s: All %d tests passed\n", __FILE__, suite_runs); } } while (0)
+		suite_fails, suite_runs, (suite_fails / (float) suite_runs) * 100, aclock_elapsed(suite_clock)); } \
+	else { printf("%40s:  All %d tests passed  Elapsed: %.4g\n", __FILE__, suite_runs, aclock_elapsed(suite_clock)); } } while (0)
 
 // Terminate a test suite.
-#define aut_terminate_suite() do { test_messages = astr_free(test_messages); } while (0)
+#define aut_terminate_suite() do { suite_clock = aclock_free(suite_clock); test_messages = astr_free(test_messages); } while (0)
 
 // Return 1 if there were failures in the suite, 0 if none.
 #define aut_return() do { return(suite_fails > 0 ? 1 : 0); } while (0)

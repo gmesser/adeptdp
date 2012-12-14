@@ -6,10 +6,12 @@
 #include <errno.h>
 
 #include "astr.h"
+#include "aclock.h"
 #include "adept_unit_test.h"
 
 int suite_runs;
 int suite_fails;
+aclock *suite_clock;
 int test_runs;
 int test_fails;
 astr *test_messages;
@@ -143,14 +145,76 @@ void test_append(void) {
 	astr_free(as_buf);
 }
 
+void test_printf(void) {
+	char *str = "ABC";
+	int num = 1;
+	char *num_str = "001";
+	char *str_plus_num_str = "ABC 001";
+	astr *as1;
+	astr *as2;
+	astr *as3;
+
+	as1 = astr_printf("%s", str);
+//	printf("%s\n", astr_print(as1));
+	aut_assert("1 test_printf creation", strcmp(as1->string, str) == 0);
+	aut_assert("1 test_printf length", as1->length == strlen(str));
+
+	as2 = astr_printf("%03d", num);
+//	printf("%s\n", astr_print(as2));
+	aut_assert("2 test_printf creation", strcmp(as2->string, num_str) == 0);
+	aut_assert("2 test_printf length", as2->length == strlen(num_str));
+
+	as3 = astr_printf("%s %03d", str, num);
+//	printf("%s\n", astr_print(as3));
+	aut_assert("3 test_printf creation", strcmp(as3->string, str_plus_num_str) == 0);
+	aut_assert("3 test_printf length", as3->length == strlen(str_plus_num_str));
+
+	astr_free(as1);
+	astr_free(as2);
+	astr_free(as3);
+}
+
+void test_printf_long(void) {
+	int num = 1;
+	char *num_str = "001";
+	char long_str[301];
+	char num_str_plus_long_str_plus_num_str[309];
+	astr *as1;
+	astr *as2;
+
+	memset(long_str, 'A', 300);
+	long_str[300] = '\0';
+
+	as1 = astr_printf("%s", long_str);
+//	printf("%s\n", astr_print(as1));
+	aut_assert("1 test_printf long creation", strcmp(as1->string, long_str) == 0);
+	aut_assert("1 test_printf long length", as1->length == strlen(long_str));
+
+	strcpy(num_str_plus_long_str_plus_num_str, num_str);
+	strcat(num_str_plus_long_str_plus_num_str, " ");
+	strcat(num_str_plus_long_str_plus_num_str, long_str);
+	strcat(num_str_plus_long_str_plus_num_str, " ");
+	strcat(num_str_plus_long_str_plus_num_str, num_str);
+
+	as2 = astr_printf("%03d %s %03d", num, long_str, num);
+//	printf("%s\n", astr_print(as2));
+	aut_assert("2 test_printf long creation", strcmp(as2->string, num_str_plus_long_str_plus_num_str) == 0);
+	aut_assert("2 test_printf long length", as2->length == strlen(num_str_plus_long_str_plus_num_str));
+
+	astr_free(as1);
+	astr_free(as2);
+}
+
 // ----------
 
 int main(int argc, char *argv[]) {
 	aut_initialize_suite();
 	aut_run_test(test_creation);
 	aut_run_test(test_reinitialization_without_creation);
-//	aut_run_test(test_reinitialization);
-//	aut_run_test(test_append);
+	aut_run_test(test_reinitialization);
+	aut_run_test(test_append);
+	aut_run_test(test_printf);
+	aut_run_test(test_printf_long);
 	aut_report();
 	aut_terminate_suite();
 	aut_return();

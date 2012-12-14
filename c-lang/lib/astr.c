@@ -11,9 +11,11 @@
  * strings are a real match when the hashes match.
  */
 
+#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <assert.h>
 
 #include "astr.h"
 
@@ -76,6 +78,41 @@ astr *astr_create(const char *string) {
 astr *astr_create_from_buffer(const char *buffer, const int length) {
 	astr *as = (astr *)calloc(1, sizeof(astr));
 	return astr_set_from_buffer(as, buffer, length);
+}
+
+/*
+ * astr_printf
+ *
+ * Create a new astr instance with contents from a call to vsnprintf().
+ *
+ * Parameter: The printf format string
+ * Parameter: The argument list for printf
+ * Returns:   Pointer to the astr instance
+ */
+astr *astr_printf(const char *fmt, ...) {
+	char buff[256];
+	char *newbuff = NULL;
+	int count, count2;
+	astr *as = NULL;
+	va_list ap;
+	va_list ap2;
+
+	va_start(ap, fmt);
+	count = vsnprintf(&buff, sizeof(buff), fmt, ap);
+	if(count < 256) {
+		as = astr_create(buff);
+		va_end(ap);
+	}
+	else {
+		va_start(ap2, fmt);
+		newbuff = malloc(count + 1);
+		count2 = vsnprintf(newbuff, count + 1, fmt, ap2);
+		as = astr_create(newbuff);
+		va_end(ap2);
+		free(newbuff);
+	}
+
+	return as;
 }
 
 /*
