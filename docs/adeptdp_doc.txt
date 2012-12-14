@@ -345,7 +345,7 @@ Method Documentation
 		Errno:     EINVAL if the string is an invalid number
 		           EDOM if the string is NULL or empty
 		           0 if the string was successfully evaluated
-		Returns:   The evaluated long value of the string
+		Returns:   The evaluated double value of the string
  
 
 	------------------------------
