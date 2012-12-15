@@ -4,17 +4,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <assert.h>
 
 #include "astr.h"
 #include "aclock.h"
 #include "adept_unit_test.h"
 
+aclock *suite_clock;
+astr *suite_messages;
 int suite_runs;
 int suite_fails;
-aclock *suite_clock;
 int test_runs;
 int test_fails;
-astr *test_messages;
 
 // ----------
 
@@ -155,17 +156,14 @@ void test_printf(void) {
 	astr *as3;
 
 	as1 = astr_printf("%s", str);
-//	printf("%s\n", astr_print(as1));
 	aut_assert("1 test_printf creation", strcmp(as1->string, str) == 0);
 	aut_assert("1 test_printf length", as1->length == strlen(str));
 
 	as2 = astr_printf("%03d", num);
-//	printf("%s\n", astr_print(as2));
 	aut_assert("2 test_printf creation", strcmp(as2->string, num_str) == 0);
 	aut_assert("2 test_printf length", as2->length == strlen(num_str));
 
 	as3 = astr_printf("%s %03d", str, num);
-//	printf("%s\n", astr_print(as3));
 	aut_assert("3 test_printf creation", strcmp(as3->string, str_plus_num_str) == 0);
 	aut_assert("3 test_printf length", as3->length == strlen(str_plus_num_str));
 
@@ -186,7 +184,6 @@ void test_printf_long(void) {
 	long_str[300] = '\0';
 
 	as1 = astr_printf("%s", long_str);
-//	printf("%s\n", astr_print(as1));
 	aut_assert("1 test_printf long creation", strcmp(as1->string, long_str) == 0);
 	aut_assert("1 test_printf long length", as1->length == strlen(long_str));
 
@@ -197,7 +194,6 @@ void test_printf_long(void) {
 	strcat(num_str_plus_long_str_plus_num_str, num_str);
 
 	as2 = astr_printf("%03d %s %03d", num, long_str, num);
-//	printf("%s\n", astr_print(as2));
 	aut_assert("2 test_printf long creation", strcmp(as2->string, num_str_plus_long_str_plus_num_str) == 0);
 	aut_assert("2 test_printf long length", as2->length == strlen(num_str_plus_long_str_plus_num_str));
 
@@ -205,9 +201,50 @@ void test_printf_long(void) {
 	astr_free(as2);
 }
 
+void test_printf_and_append(void) {
+	astr *as;
+	char long_str[301];
+	memset(long_str, 'A', 300);
+	long_str[300] = '\0';
+	int i, j;
+
+	for (j = 0; j < 100; j++) {
+		as = astr_printf("%s", long_str);
+		for (i = 0; i < 100; i++) {
+			as = astr_append(as, long_str);
+		}
+		as = astr_free(as);
+
+		as = astr_printf("%s", long_str);
+		for (i = 0; i < 100; i++) {
+			as = astr_append(as, long_str);
+		}
+		as = astr_free(as);
+
+		as = astr_printf("%s", long_str);
+		for (i = 0; i < 100; i++) {
+			as = astr_append(as, long_str);
+		}
+		as = astr_free(as);
+
+		as = astr_printf("%s", long_str);
+		for (i = 0; i < 100; i++) {
+			as = astr_append(as, long_str);
+		}
+		as = astr_free(as);
+
+		as = astr_printf("%s", long_str);
+		for (i = 0; i < 100; i++) {
+			as = astr_append(as, long_str);
+		}
+		as = astr_free(as);
+	}
+}
+
 // ----------
 
 int main(int argc, char *argv[]) {
+	astr *as = NULL;
 	aut_initialize_suite();
 	aut_run_test(test_creation);
 	aut_run_test(test_reinitialization_without_creation);
@@ -215,6 +252,7 @@ int main(int argc, char *argv[]) {
 	aut_run_test(test_append);
 	aut_run_test(test_printf);
 	aut_run_test(test_printf_long);
+	aut_run_test(test_printf_and_append);
 	aut_report();
 	aut_terminate_suite();
 	aut_return();

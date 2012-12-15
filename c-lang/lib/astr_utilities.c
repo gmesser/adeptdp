@@ -13,6 +13,33 @@
 static char *dump_buffer(char *dst, size_t dstlen, const void *src, size_t srclen);
 
 /*
+ * astr_update
+ *
+ * Update the checksum and length of an astr instance.
+ * Call this when the string member is modified using a function from outside
+ * the astr module that does not update these fields.
+ *
+ * Parameter: The astr instance
+ * Returns:   Pointer to the astr instance
+ */
+astr *astr_update(astr *as) {
+	char *p;
+	int cs = 0;
+	int len = 0;
+
+	if (as != NULL) {
+		if (as->string != NULL) {
+			for (p = as->string; *p != '\0'; p++) {
+				cs += *p;
+				len++;
+			}
+		}
+		as->checksum = cs;
+		as->length = len;
+	}
+}
+
+/*
  * astr_calc_checksum
  *
  * Calculate the checksum for an astr instance.

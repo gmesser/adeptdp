@@ -26,7 +26,7 @@ astr *astr_to_upper_case(astr *as) {
 		for (i = 0; i < as->length && (as->string)[i] != '\0'; i++) {
 			(as->string)[i] = toupper((as->string)[i]);
 		}
-		as->checksum = astr_calc_checksum(as);
+		astr_update(as);
 	}
 	return as;
 }
@@ -45,7 +45,7 @@ astr *astr_to_lower_case(astr *as) {
 		for (i = 0; i < as->length && (as->string)[i] != '\0'; i++) {
 			(as->string)[i] = tolower((as->string)[i]);
 		}
-		as->checksum = astr_calc_checksum(as);
+		astr_update(as);
 	}
 	return as;
 }
@@ -75,7 +75,7 @@ astr *astr_to_mixed_case(astr *as) {
 			}
 			last = (as->string)[i];
 		}
-		as->checksum = astr_calc_checksum(as);
+		astr_update(as);
 	}
 	return as;
 }
@@ -108,8 +108,7 @@ astr *astr_left_trim(astr *as) {
 			}
 		}
 		if(s > as->string) {
-			as->length = strlen(as->string);
-			as->checksum = astr_calc_checksum(as);
+			astr_update(as);
 		}
 	}
 	return as;
@@ -138,8 +137,7 @@ astr *astr_right_trim(astr *as) {
 			*s-- = '\0';
 		}
 		if (s < (end - 1)) {
-			as->length = strlen(as->string);
-			as->checksum = astr_calc_checksum(as);
+			astr_update(as);
 		}
 	}
 	return as;
@@ -187,8 +185,7 @@ astr *astr_pack(astr *as) {
 		}
 		*d = '\0';
 		if (s < (end - 1)) {
-			as->length = strlen(as->string);
-			as->checksum = astr_calc_checksum(as);
+			astr_update(as);
 		}
 	}
 	return as;
@@ -236,6 +233,32 @@ astr *astr_not_empty_char(astr *as, const char sole) {
 		if (as->string == NULL || as->length <= 0) {
 			sole_str[0] = sole;
 			as = astr_set(as, sole_str);
+		}
+		astr_update(as);
+	}
+	return as;
+}
+
+/*
+ * astr_reverse
+ *
+ * Reverse the characters in an astr string.
+ *
+ * Parameter: The astr instance to be edited
+ * Returns:   Pointer to the astr instance
+ */
+astr *astr_reverse(astr *as) {
+	char *b, *e;
+	char x;
+	if (as != NULL && as->length > 1) {
+		b = as->string;
+		e = as->string + as->length - 1;
+		while (b < e) {
+			x = *b;
+			*b = *e;
+			*e = x;
+			b++;
+			e--;
 		}
 	}
 	return as;

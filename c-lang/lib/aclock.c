@@ -8,20 +8,9 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
+#include "astr.h"
 #include "aclock.h"
-
-/*
- * aclock_diff
- *
- * Calculate the difference between two time values.
- *
- * Parameter: The start time
- * Parameter: The end time
- * Returns: The difference in secods between the two times
- */
-double aclock_diff(double start, double end) {
-	return(end - start);
-}
 
 /*
  * aclock_current_time
@@ -36,8 +25,23 @@ double aclock_diff(double start, double end) {
  * Returns: The current CPU clock (system-dependent, normally in milliseconds)
  */
 double aclock_current_time() {
-	clock_t ct = clock();
-	return ct / (double) CLOCKS_PER_SEC;
+	clock_t ct = clock(); // current time
+	double ct_secs = (double) (ct / (double) CLOCKS_PER_SEC);
+	return ct_secs;
+}
+
+/*
+ * aclock_diff
+ *
+ * Calculate the difference between two time values.
+ *
+ * Parameter: The start time in seconds
+ * Parameter: The end time in seconds
+ * Returns: The difference in seconds between the two times
+ */
+double aclock_diff(double start, double end) {
+	double d = (end - start); // difference in times
+	return d;
 }
 
 /*
@@ -50,12 +54,11 @@ double aclock_current_time() {
 aclock *aclock_create() {
 	aclock *ac = malloc(sizeof(aclock));
 
-	if (ac == NULL) {
-		return NULL;
+	assert(ac != NULL);
+	
+	if (ac != NULL) {
+		aclock_init(ac);
 	}
-
-	aclock_reset(ac);
-	aclock_start(ac);
 	
 	return ac;
 }
@@ -71,9 +74,10 @@ aclock *aclock_create() {
 aclock *aclock_free(aclock *ac) {
 	if(ac != NULL) {
 		free(ac);
+		ac = NULL;
 	}
 
-	return NULL;
+	return ac;
 }
 
 /*
@@ -85,17 +89,20 @@ aclock *aclock_free(aclock *ac) {
  * Returns: The current elapsed time
  */
 double aclock_init(aclock *ac) {
-	if (ac == NULL) {
-		return 0.0;
+	double et = 0.0; // elapsed time
+
+	assert(ac != NULL);
+
+	if (ac != NULL) {
+		ac->lasttime = aclock_current_time();
+		ac->lastloop = ac->lasttime;
+		ac->started = ac->lasttime;
+		ac->stopped = 0.0;
+		ac->elapsed = 0.0;
+		et = 0.0;
 	}
 
-	double ct = aclock_current_time();
-	ac->lastloop = ct;
-	ac->started = ct;
-	ac->stopped = 0.0;
-	ac->elapsed = 0.0;
-
-	return ac->elapsed;
+	return et;
 }
 
 /*
@@ -107,17 +114,20 @@ double aclock_init(aclock *ac) {
  * Returns: The current elapsed time
  */
 double aclock_restart(aclock *ac) {
-	if (ac == NULL) {
-		return 0.0;
+	double et = 0.0; // elapsed time
+
+	assert(ac != NULL);
+
+	if (ac != NULL) {
+		ac->lasttime = aclock_current_time();
+		ac->lastdiff = aclock_diff(ac->stopped, ac->lasttime);
+		ac->started += ac->lastdiff;
+		ac->lastloop += ac->lastdiff;
+		ac->stopped = 0.0;
+		et = aclock_elapsed(ac);
 	}
 
-	double ct = aclock_current_time();
-	double sd = aclock_diff(ac->stopped, ct);
-	ac->started += sd;
-	ac->lastloop += sd;
-	ac->stopped = 0.0;
-
-	return ac->elapsed;
+	return et;
 }
 
 /*
@@ -140,18 +150,21 @@ double aclock_restart(aclock *ac) {
  * Returns: The current elapsed time
  */
 double aclock_start(aclock *ac) {
-	if (ac == NULL) {
-		return 0.0;
+	double et = 0.0; // elapsed time
+
+	assert(ac != NULL);
+
+	if (ac != NULL) {
+		if (aclock_isstopped(ac)) {
+			aclock_restart(ac);
+		}
+		else {
+			aclock_init(ac);
+		}
+		et = ac->elapsed;
 	}
 
-	if (ac->stopped) {
-		aclock_restart(ac);
-	}
-	else {
-		aclock_init(ac);
-	}
-
-	return aclock_elapsed(ac);
+	return et;
 }
 
 /*
@@ -168,37 +181,42 @@ double aclock_start(aclock *ac) {
  * Returns: The current elapsed time
  */
 double aclock_stop(aclock *ac) {
-	if (ac == NULL) {
-		return 0.0;
+	double et = 0.0; // elapsed time
+
+	assert(ac != NULL);
+
+	if (ac != NULL) {
+		if (!aclock_isstopped(ac)) {
+			ac->stopped = ac->lasttime = aclock_current_time();
+		}
+		et = aclock_elapsed(ac);
 	}
 
-	if (!ac->stopped) {
-		ac->stopped = aclock_current_time();
-	}
-
-	return aclock_elapsed(ac);
+	return et;
 }
 
 /*
  * aclock_reset
  *
- * Stop the clock and initialize all times to the
- * current time.
- * The aclock_start() function must be called to
- * restart it.
+ * Stop the clock.  
+ * Initialize all times to the current time.
+ * Initialize all calculated values to 0.0.
+ * The aclock_start() function must be called to restart the clock.
  *
  * Parameter: The aclock instance
  * Returns: The current elapsed time
  */
 double aclock_reset(aclock *ac) {
-	if (ac == NULL) {
-		return 0.0;
+	double et = 0.0; // elapsed time
+
+	assert(ac != NULL);
+
+	if (ac != NULL) {
+		ac->lasttime = ac->lastloop = ac->started = ac->stopped = aclock_current_time();
+		et = ac->lastdiff = ac->elapsed = 0.0;
 	}
 
-	ac->lastloop = ac->started = ac->stopped = aclock_current_time();
-	ac->elapsed = 0.0;
-
-	return aclock_elapsed(ac);
+	return et;
 }
 
 /*
@@ -212,23 +230,23 @@ double aclock_reset(aclock *ac) {
  * Returns: The number of seconds since loop() was last called
  */
 double aclock_loop(aclock *ac) {
-	if (ac == NULL) {
-		return 0.0;
+	double lt = 0.0; // loop time
+
+	assert(ac != NULL);
+
+	if (ac != NULL) {
+		if (aclock_isstopped(ac)) {
+			lt = aclock_diff(ac->lastloop, ac->stopped);
+			ac->lastloop = ac->stopped;
+		}
+		else {
+			ac->lasttime = aclock_current_time();
+			lt = aclock_diff(ac->lastloop, ac->lasttime);
+			ac->lastloop = ac->lasttime;
+		}
 	}
 
-	double dl; // difference from last loop
-
-	if (ac->stopped) {
-		dl = aclock_diff(ac->lastloop, ac->stopped);
-		ac->lastloop = ac->stopped;
-	}
-	else {
-		double ct = aclock_current_time();
-		dl = aclock_diff(ac->lastloop, ct);
-		ac->lastloop = ct;
-	}
-
-	return dl;
+	return lt;
 }
 
 /*
@@ -242,21 +260,21 @@ double aclock_loop(aclock *ac) {
  * Returns: The number of seconds since loop() was last called
  */
 double aclock_check_loop(aclock *ac) {
-	if (ac == NULL) {
-		return 0.0;
+	double lt = 0.0; // loop time
+
+	assert(ac != NULL);
+
+	if (ac != NULL) {
+		if (aclock_isstopped(ac)) {
+			lt = aclock_diff(ac->lastloop, ac->stopped);
+		}
+		else {
+			ac->lasttime = aclock_current_time();
+			lt = aclock_diff(ac->lastloop, ac->lasttime);
+		}
 	}
 
-	double dl; // difference from last loop
-
-	if (ac->stopped) {
-		dl = aclock_diff(ac->lastloop, ac->stopped);
-	}
-	else {
-		double ct = aclock_current_time();
-		dl = aclock_diff(ac->lastloop, ct);
-	}
-
-	return dl;
+	return lt;
 }
 
 /*
@@ -270,18 +288,23 @@ double aclock_check_loop(aclock *ac) {
  * Returns: The current elapsed time
  */
 double aclock_elapsed(aclock *ac) {
-	if (ac == NULL) {
-		return 0.0;
+	double et; // elapsed time
+	
+	assert(ac != NULL);
+
+	if (ac != NULL) {
+		if (aclock_isstopped(ac)) {
+			ac->elapsed = ac->lastdiff = aclock_diff(ac->started, ac->stopped);
+		}
+		else {
+			ac->lasttime = aclock_current_time();
+			ac->elapsed = aclock_diff(ac->started, ac->lasttime);
+		}
+
+		et = ac->elapsed;
 	}
 
-	if (ac->stopped) {
-		ac->elapsed = aclock_diff(ac->started, ac->stopped);
-	}
-	else {
-		ac->elapsed = aclock_diff(ac->started, aclock_current_time());
-	}
-
-	return ac->elapsed;
+	return et;
 }
 
 /*
@@ -293,14 +316,14 @@ double aclock_elapsed(aclock *ac) {
  * Return: Non-zero if the clock is stopped, and zero if it is running
  */
 int aclock_isstopped(aclock *ac) {
-	if (ac == NULL) {
-		return 0.0;
-	}
+	assert(ac != NULL);
 
-	if (ac->stopped)
+	if (ac != NULL && ac->stopped > 0.0) {
 		return 1;
-	else
+	}
+	else {
 		return 0;
+	}
 }
 
 /*
@@ -353,4 +376,28 @@ double aclock_elapsedDHMS(double elapsed_time, double *days, double *hours, doub
 	}
 
 	return elapsed_time;
+}
+
+astr *aclock_to_astr(aclock *ac) {
+	char *lbl_started   = "    Started: ";
+	char *lbl_stopped   = "    Stopped: ";
+	char *lbl_isstopped = "isstopped(): ";
+	char *lbl_lasttime  = "  Last Time: ";
+	char *lbl_lastloop  = "  Last Loop: ";
+	char *lbl_lastdiff  = "  Last Diff: ";
+	char *lbl_elapsed   = "    Elapsed: ";
+	astr *as = NULL;
+
+	if (ac != NULL) {
+		int stopped = aclock_isstopped(ac);
+		as = astr_printf("%s%.10g\n%s%.10g\n%s%d\n%s%.10g\n%s%.10g\n%s%.10g\n%s%.10g",
+			lbl_started, ac->started,
+			lbl_stopped, ac->stopped,
+			lbl_isstopped, stopped,
+			lbl_lasttime, ac->lasttime,
+			lbl_lastloop, ac->lastloop,
+			lbl_lastdiff, ac->lastdiff,
+			lbl_elapsed, ac->elapsed);
+	}
+	return as;
 }

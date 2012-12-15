@@ -14,7 +14,7 @@ int suite_fails;
 aclock *suite_clock;
 int test_runs;
 int test_fails;
-astr *test_messages;
+astr *suite_messages;
 char error[256];
 
 char *upper =                        "A BCDE FGHI JKLM []{}|\\;:,.<>/?`-=~!@#$%^&*()_+ NOPQ RSTU VWXY Z";
@@ -26,6 +26,8 @@ char *leading_trailing = " \t\n\v\f\r A BCDE FGHI JKLM []{}|\\;:,.<>/?`-=~!@#$%^
 char *dirty_string =         "  dirty   string  ";
 char *packed_dirty_string =  " dirty string ";
 char *cleaned_dirty_string = "dirty string";
+char *forward_string = "A B C D E F";
+char *reverse_string = "F E D C B A";
 
 // ----------
 
@@ -261,6 +263,19 @@ void test_clean_cleaned_string(void) {
 	aut_assert("2 test clean", strcmp(as->string, cleaned_dirty_string) == 0);
 }
 
+void test_reverse_string(void) {
+	astr *as;
+
+	as = astr_create(forward_string);
+	aut_assert("1 test reverse", strcmp(as->string, forward_string) == 0);
+
+	as = astr_reverse(as);
+	aut_assert("2 test reverse", strcmp(as->string, reverse_string) == 0);
+
+	as = astr_reverse(as);
+	aut_assert("3 test reverse", strcmp(as->string, forward_string) == 0);
+}
+
 // ----------
 
 int main(int argc, char *argv[]) {
@@ -278,6 +293,7 @@ int main(int argc, char *argv[]) {
 	aut_run_test(test_clean_dirty_string);
 	aut_run_test(test_clean_packed_string);
 	aut_run_test(test_clean_cleaned_string);
+	aut_run_test(test_reverse_string);
 	aut_report();
 	aut_terminate_suite();
 	aut_return();

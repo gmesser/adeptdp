@@ -1,7 +1,7 @@
 // astr.h - Adept String
 
-#ifndef ASTR_H_INCLUDED
-#define ASTR_H_INCLUDED
+#ifndef ASTR_H
+#define ASTR_H
 
 #include <stdio.h>
 
@@ -32,7 +32,9 @@
  *
  * The standard C library string handling functions are not redefined here.
  * Use the standard C library functions to manipulate the string inside the
- * astr object.
+ * astr object.  Note that if you edit the string in a material way, you will
+ * need to call astr_update() to reset the checksum and length  values in
+ * the astr structure.
  *
  * No effort has been made to make this module thread-safe.
  */
@@ -64,7 +66,7 @@ astr *astr_create(const char *string);
 // Allocate a new astr initialized with a buffer of specified length.
 astr *astr_create_from_buffer(const char *buffer, const int length);
 
-// Allocate a new astr initialized by a call to vsnprintf.
+// Allocate a new astr initialized by a call to vsnprintf with the specified format and arguments.
 astr *astr_printf(const char *fmt, ...);
 
 // Reinitialize an astr with a string.
@@ -175,8 +177,14 @@ astr *astr_not_empty(astr *as);
 // Make sure the astr string is not empty (or NULL), use specified sole character.
 astr *astr_not_empty_char(astr *as, const char sole);
 
+// Reverse the characters in an astr string.
+astr *astr_reverse(astr *as);
+
 // ----------------------
 // Utility
+
+// Update the checksum and length of an astr instance.
+astr *astr_update(astr *as);
 
 // Calculate the checksum of an astr instance.
 int astr_calc_checksum(const astr *as);
@@ -203,4 +211,4 @@ char *astr_print_struct(const astr *as);
 }
 #endif
 
-#endif // ASTR_H_INCLUDED
+#endif // ASTR_H

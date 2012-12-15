@@ -1,7 +1,7 @@
 // afile.h - Adept file handling
 
-#ifndef AFILE_H_INCLUDED
-#define AFILE_H_INCLUDED
+#ifndef AFILE_H
+#define AFILE_H
 
 #include <stdio.h>
 #include <sys/stat.h>
@@ -103,4 +103,4 @@ char *afile_print_struct(const afile *af);
 }
 #endif
 
-#endif	// AFILE_H_INCLUDED
+#endif	// AFILE_H

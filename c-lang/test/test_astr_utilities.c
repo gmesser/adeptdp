@@ -14,7 +14,7 @@ int suite_fails;
 aclock *suite_clock;
 int test_runs;
 int test_fails;
-astr *test_messages;
+astr *suite_messages;
 
 // ----------
 

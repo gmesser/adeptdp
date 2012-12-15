@@ -83,7 +83,7 @@ astr *astr_create_from_buffer(const char *buffer, const int length) {
 /*
  * astr_printf
  *
- * Create a new astr instance with contents from a call to vsnprintf().
+ * Create a new astr with contents from a call to vsnprintf with the specified format and arguments.
  *
  * Parameter: The printf format string
  * Parameter: The argument list for printf
@@ -98,8 +98,8 @@ astr *astr_printf(const char *fmt, ...) {
 	va_list ap2;
 
 	va_start(ap, fmt);
-	count = vsnprintf(&buff, sizeof(buff), fmt, ap);
-	if(count < 256) {
+	count = vsnprintf(buff, sizeof(buff), fmt, ap);
+	if (count < 256) {
 		as = astr_create(buff);
 		va_end(ap);
 	}
