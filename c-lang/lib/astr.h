@@ -40,10 +40,20 @@
  */
 
 typedef struct astr {
+	// Pointer to the storage for the string
 	char *string;
+
+	// Checksum of the string, used in comparisons
 	int checksum;
+
+	// String length
 	int length;
+
+	// Number of characters allocated for string, always at least length+1
 	int allocated_length;
+	
+	// Pointer to the end of the last token, used when tokenizing the string
+	char *tokenend;
 } astr;
 
 #ifdef	__cplusplus
@@ -68,6 +78,12 @@ astr *astr_create_from_buffer(const char *buffer, const int length);
 
 // Allocate a new astr initialized by a call to vsnprintf with the specified format and arguments.
 astr *astr_printf(const char *fmt, ...);
+
+// Allocate a new astr initialized with one token at a time from an astr, delimited by delims.
+astr *astr_tok(astr *as, char *delims);
+
+// Allocate an array of new astr instances initialized with all the tokens from an astr, delimited by delims.
+astr **astr_split(astr *as, char *delims);
 
 // Reinitialize an astr with a string.
 astr *astr_set(astr *as, const char *string);
@@ -185,9 +201,6 @@ astr *astr_reverse(astr *as);
 
 // Update the checksum and length of an astr instance.
 astr *astr_update(astr *as);
-
-// Calculate the checksum of an astr instance.
-int astr_calc_checksum(const astr *as);
 
 // Dump an astr instance in hex dump format.
 char *astr_hexdump(const astr *as);

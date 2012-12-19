@@ -130,6 +130,41 @@ Method Documentation
 
 
 		-----
+		astr_tok
+
+		Create a new astr with contents from one token at a time from an astr
+		instance, delimited by delims.
+
+		The delimiters can be different for each call to astr_tok.
+		Once you start extracting tokens from an astr instance, subsequent calls
+		will continue extracting tokens.
+
+		Just like the standard C library function strtok, a null byte is written
+		to the source astr's string at the end of each token.  You will need to
+		copy the original astr instance if you need it in its original form later.
+
+		Parameter: The astr instance  to be tokenized
+		Parameter: The string containing the delimiters
+		Returns:   Pointer to the new astr instance
+
+
+		-----
+		astr_split
+
+		Create an array of new astr instances with contents from all the tokens
+		from an astr instance, delimited by delims.
+
+		Just like the standard C library function strtok, a null byte is written
+		to the source astr's string at the end of each token.  You will need to
+		copy the original astr instance if you need it in its original form later.
+
+		Parameter: The astr instance  to be tokenized
+		Parameter: The string containing the delimiters
+		Returns:   Pointer to an array of astr pointers.  The last array element
+				will be a NULL pointer for a terminator.
+
+
+		-----
 		astr_set
 
 		(Re)initialize an astr instance with contents from a string.

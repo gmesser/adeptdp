@@ -40,27 +40,6 @@ astr *astr_update(astr *as) {
 }
 
 /*
- * astr_calc_checksum
- *
- * Calculate the checksum for an astr instance.
- *
- * Parameter: The astr instance
- * Returns:	  The checksum of the string in an astr instance.
- */
-int astr_calc_checksum(const astr *as) {
-	char *p;
-	int cs = 0;
-	if (as != NULL) {
-		if (as->string != NULL) {
-			for (p = as->string; *p != '\0'; p++) {
-				cs += *p;
-			}
-		}
-	}
-	return cs;
-}
-
-/*
  * astr_print
  *
  * Print an astr instance in labeled string format.

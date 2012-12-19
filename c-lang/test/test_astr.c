@@ -241,6 +241,181 @@ void test_printf_and_append(void) {
 	}
 }
 
+void test_tok(void) {
+	char *delims = " \t\r\n";
+	char *tok1 = "ABC";
+	char *tok2 = "EFG";
+	char *tok3 = "IJK";
+	char *str1 = "ABC EFG IJK";
+	char *str2 = "   ABC EFG IJK";
+	char *str3 = "ABC EFG IJK   ";
+	char *str4 = " \t \r\n ABC EFG IJK\r\n \t    ";
+	char *tokens[] = {"ABC", "EFG", "IJK"};
+	astr *as, *as1, *as2, *as3, *as4;
+
+	// Tokenize str1
+	as = astr_create(str1);
+	as1 = astr_tok(as, delims);
+	aut_assert("str1 as1 not NULL", as1 != NULL);
+	aut_assert("str1 as1 correct", strcmp(as1->string, tok1) == 0);
+	as2 = astr_tok(as, delims);
+	aut_assert("str1 as2 not NULL", as2 != NULL);
+	aut_assert("str1 as2 correct", strcmp(as2->string, tok2) == 0);
+	as3 = astr_tok(as, delims);
+	aut_assert("str1 as3 not NULL", as3 != NULL);
+	aut_assert("str1 as3 correct", strcmp(as3->string, tok3) == 0);
+	as4 = astr_tok(as, delims);
+	aut_assert("str1 as4 IS NULL", as4 == NULL);
+	as = astr_free(as);
+	as1 = astr_free(as1);
+	as2 = astr_free(as2);
+	as3 = astr_free(as3);
+	as4 = astr_free(as4);
+
+	// Tokenize str2
+	as = astr_create(str2);
+	as1 = astr_tok(as, delims);
+	aut_assert("str2 as1 not NULL", as1 != NULL);
+	aut_assert("str2 as1 correct", strcmp(as1->string, tok1) == 0);
+	as2 = astr_tok(as, delims);
+	aut_assert("str2 as2 not NULL", as2 != NULL);
+	aut_assert("str2 as2 correct", strcmp(as2->string, tok2) == 0);
+	as3 = astr_tok(as, delims);
+	aut_assert("str2 as3 not NULL", as3 != NULL);
+	aut_assert("str2 as3 correct", strcmp(as3->string, tok3) == 0);
+	as4 = astr_tok(as, delims);
+	aut_assert("str2 as4 IS NULL", as4 == NULL);
+	as = astr_free(as);
+	as1 = astr_free(as1);
+	as2 = astr_free(as2);
+	as3 = astr_free(as3);
+	as4 = astr_free(as4);
+
+	// Tokenize str3
+	as = astr_create(str3);
+	as1 = astr_tok(as, delims);
+	aut_assert("str3 as1 not NULL", as1 != NULL);
+	aut_assert("str3 as1 correct", strcmp(as1->string, tok1) == 0);
+	as2 = astr_tok(as, delims);
+	aut_assert("str3 as2 not NULL", as2 != NULL);
+	aut_assert("str3 as2 correct", strcmp(as2->string, tok2) == 0);
+	as3 = astr_tok(as, delims);
+	aut_assert("str3 as3 not NULL", as3 != NULL);
+	aut_assert("str3 as3 correct", strcmp(as3->string, tok3) == 0);
+	as4 = astr_tok(as, delims);
+	aut_assert("str3 as4 IS NULL", as4 == NULL);
+	as = astr_free(as);
+	as1 = astr_free(as1);
+	as2 = astr_free(as2);
+	as3 = astr_free(as3);
+	as4 = astr_free(as4);
+
+	// Tokenize str4
+	as = astr_create(str4);
+	as1 = astr_tok(as, delims);
+	aut_assert("str4 as1 not NULL", as1 != NULL);
+	aut_assert("str4 as1 correct", strcmp(as1->string, tok1) == 0);
+	as2 = astr_tok(as, delims);
+	aut_assert("str4 as2 not NULL", as2 != NULL);
+	aut_assert("str4 as2 correct", strcmp(as2->string, tok2) == 0);
+	as3 = astr_tok(as, delims);
+	aut_assert("str4 as3 not NULL", as3 != NULL);
+	aut_assert("str4 as3 correct", strcmp(as3->string, tok3) == 0);
+	as4 = astr_tok(as, delims);
+	aut_assert("str4 as4 IS NULL", as4 == NULL);
+	as = astr_free(as);
+	as1 = astr_free(as1);
+	as2 = astr_free(as2);
+	as3 = astr_free(as3);
+	as4 = astr_free(as4);
+}
+
+void test_split(void) {
+	char *delims = " \t\r\n";
+	char *tok1 = "ABC";
+	char *tok2 = "EFG";
+	char *tok3 = "IJK";
+	char *str1 = "ABC EFG IJK";
+	char *str2 = "   ABC EFG IJK";
+	char *str3 = "ABC EFG IJK   ";
+	char *str4 = " \t \r\n ABC EFG IJK\r\n \t    ";
+	char *tokens[] = {"ABC", "EFG", "IJK"};
+	astr *as, *as1, *as2, *as3, *as4;
+	astr **asa;
+
+	// Split str1
+	as = astr_create(str1);
+	asa = astr_split(as, delims);
+
+	aut_assert("str1 asa[0] not NULL", asa[0] != NULL);
+	aut_assert("str1 asa[0] correct", strcmp((asa[0])->string, tok1) == 0);
+	aut_assert("str1 asa[1] not NULL", asa[1] != NULL);
+	aut_assert("str1 asa[1] correct", strcmp((asa[1])->string, tok2) == 0);
+	aut_assert("str1 asa[2] not NULL", asa[2] != NULL);
+	aut_assert("str1 asa[2] correct", strcmp((asa[2])->string, tok3) == 0);
+	aut_assert("str1 asa[3] IS NULL", asa[3] == NULL);
+
+	as = astr_free(as);
+	for(int i = 0; asa[i] != NULL; i++) {
+		asa[i] = astr_free(asa[i]);
+		free(asa[i]);
+	}
+
+	// Split str2
+	as = astr_create(str2);
+	asa = astr_split(as, delims);
+
+	aut_assert("str2 asa[0] not NULL", asa[0] != NULL);
+	aut_assert("str2 asa[0] correct", strcmp((asa[0])->string, tok1) == 0);
+	aut_assert("str2 asa[1] not NULL", asa[1] != NULL);
+	aut_assert("str2 asa[1] correct", strcmp((asa[1])->string, tok2) == 0);
+	aut_assert("str2 asa[2] not NULL", asa[2] != NULL);
+	aut_assert("str2 asa[2] correct", strcmp((asa[2])->string, tok3) == 0);
+	aut_assert("str2 asa[3] IS NULL", asa[3] == NULL);
+
+	as = astr_free(as);
+	for(int i = 0; asa[i] != NULL; i++) {
+		asa[i] = astr_free(asa[i]);
+		free(asa[i]);
+	}
+
+	// Split str3
+	as = astr_create(str3);
+	asa = astr_split(as, delims);
+
+	aut_assert("str3 asa[0] not NULL", asa[0] != NULL);
+	aut_assert("str3 asa[0] correct", strcmp((asa[0])->string, tok1) == 0);
+	aut_assert("str3 asa[1] not NULL", asa[1] != NULL);
+	aut_assert("str3 asa[1] correct", strcmp((asa[1])->string, tok2) == 0);
+	aut_assert("str3 asa[2] not NULL", asa[2] != NULL);
+	aut_assert("str3 asa[2] correct", strcmp((asa[2])->string, tok3) == 0);
+	aut_assert("str3 asa[3] IS NULL", asa[3] == NULL);
+
+	as = astr_free(as);
+	for(int i = 0; asa[i] != NULL; i++) {
+		asa[i] = astr_free(asa[i]);
+		free(asa[i]);
+	}
+
+	// Split str4
+	as = astr_create(str4);
+	asa = astr_split(as, delims);
+
+	aut_assert("str4 asa[0] not NULL", asa[0] != NULL);
+	aut_assert("str4 asa[0] correct", strcmp((asa[0])->string, tok1) == 0);
+	aut_assert("str4 asa[1] not NULL", asa[1] != NULL);
+	aut_assert("str4 asa[1] correct", strcmp((asa[1])->string, tok2) == 0);
+	aut_assert("str4 asa[2] not NULL", asa[2] != NULL);
+	aut_assert("str4 asa[2] correct", strcmp((asa[2])->string, tok3) == 0);
+	aut_assert("str4 asa[3] IS NULL", asa[3] == NULL);
+
+	as = astr_free(as);
+	for(int i = 0; asa[i] != NULL; i++) {
+		asa[i] = astr_free(asa[i]);
+		free(asa[i]);
+	}
+}
+
 // ----------
 
 int main(int argc, char *argv[]) {
@@ -253,6 +428,8 @@ int main(int argc, char *argv[]) {
 	aut_run_test(test_printf);
 	aut_run_test(test_printf_long);
 	aut_run_test(test_printf_and_append);
+	aut_run_test(test_tok);
+	aut_run_test(test_split);
 	aut_report();
 	aut_terminate_suite();
 	aut_return();

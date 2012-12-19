@@ -62,7 +62,7 @@ astr *astr_copy(const astr *src) {
  * Returns:   Pointer to the astr instance
  */
 astr *astr_create(const char *string) {
-	astr *as = (astr *)calloc(1, sizeof(astr));
+	astr *as = astr_create_empty();
 	return astr_set(as, string);
 }
 
@@ -76,7 +76,7 @@ astr *astr_create(const char *string) {
  * Returns:   Pointer to the astr instance
  */
 astr *astr_create_from_buffer(const char *buffer, const int length) {
-	astr *as = (astr *)calloc(1, sizeof(astr));
+	astr *as = astr_create_empty();
 	return astr_set_from_buffer(as, buffer, length);
 }
 
@@ -113,6 +113,94 @@ astr *astr_printf(const char *fmt, ...) {
 	}
 
 	return as;
+}
+
+/*
+ * astr_tok
+ *
+ * Create a new astr with contents from one token at a time from an astr
+ * instance, delimited by delims.
+ *
+ * The delimiters can be different for each call to astr_tok.
+ * Once you start extracting tokens from an astr instance, subsequent calls
+ * will continue extracting tokens.
+ *
+ * Just like the standard C library function strtok, a null byte is written
+ * to the source astr's string at the end of each token.  You will need to copy
+ * the original astr instance if you need it in its original form later.
+ *
+ * Parameter: The astr instance  to be tokenized
+ * Parameter: The string containing the delimiters
+ * Returns:   Pointer to the new astr instance
+ */
+astr *astr_tok(astr *as, char *delims) {
+	char *default_delims = " \t\r\n";
+	astr *atok = NULL;
+
+	if (as != NULL) {
+		if (delims == NULL) {
+			// Use the default delimiters.
+			delims = default_delims;
+		}
+
+		if (as->tokenend == NULL) {
+			// This is the first call for this astr, start at the beginning.
+			as->tokenend = as->string;
+		}
+
+		if(*(as->tokenend) != '\0') {
+			// We did not reach the end on the last call and/or the string ahead is not empty.
+			// Skip any leading delimiters.
+			as->tokenend += strspn(as->tokenend, delims);
+			if(*(as->tokenend) != '\0') {
+				// There is more string ahead to tokenize.
+				char *tok = as->tokenend;
+				// Find the next delimiter.
+				as->tokenend += strcspn(as->tokenend, delims);
+				if (*(as->tokenend) != '\0') {
+					// This token ended before the end of the string.
+					// Write '\0', set up for the next call.
+					*(as->tokenend) = '\0';
+					as->tokenend++;
+				}
+				// Make the new astr instance with this token.
+				atok = astr_create(tok);
+			}
+		}
+		astr_update(as);
+	}
+
+	return atok;
+}
+
+/*
+ * astr_split
+ *
+ * Create an array of new astr instances with contents from all the tokens from 
+ * an astr instance, delimited by delims.
+ *
+ * Just like the standard C library function, strtok, a null byte is written
+ * to the source astr's string.  You will need to copy the original astr
+ * instance if you need it in its original form later.
+ *
+ * Parameter: The astr instance  to be tokenized
+ * Parameter: The string containing the delimiters
+ * Returns:   Pointer to an array of astr pointers.  The last array element
+ *            will be a NULL pointer for a terminator.
+ */
+astr **astr_split(astr *as, char *delims) {
+	int numelements = 1;
+	astr **asa = (astr**) malloc(numelements * sizeof(astr *));
+
+	for(astr *atok = astr_tok(as, delims); atok != NULL; atok = astr_tok(as, delims)) {
+		numelements++;
+		asa = (astr**) realloc(asa, numelements);
+		asa[numelements - 2] = astr_copy(atok);
+	}
+
+	asa[numelements - 1] = NULL;
+
+	return asa;
 }
 
 /*
@@ -308,6 +396,8 @@ static astr *astr_allocate_string(astr *as, size_t length) {
 		if (as->string == NULL) {
 			astr_clear(as);
 		}
+
+		as->tokenend = NULL;
 	}
 	return as;
 }
@@ -338,6 +428,8 @@ static astr *astr_reallocate_string(astr *as, size_t length) {
 		else {
 			astr_allocate_string(as, length);
 		}
+
+		as->tokenend = NULL;
 	}
 	return as;
 }
@@ -346,7 +438,7 @@ static astr *astr_reallocate_string(astr *as, size_t length) {
  * astr_clear
  *
  * Clear an astr instance.
- * Keep the storage allocation, set the other members to zero.
+ * Keep the storage allocation, set the other members to zero/NULL.
  *
  * Parameter: The astr instance
  * Returns:   Pointer to the astr instance
@@ -358,6 +450,7 @@ static astr *astr_clear(astr *as) {
 		}
 		as->length = 0;
 		as->checksum = 0;
+		as->tokenend = NULL;
 	}
 	return as;
 }
@@ -380,6 +473,7 @@ static astr *astr_free_string(astr *as) {
 		as->allocated_length = 0;
 		as->length = 0;
 		as->checksum = 0;
+		as->tokenend = NULL;
 	}
 	return as;
 }

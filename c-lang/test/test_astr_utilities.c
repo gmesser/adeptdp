@@ -20,15 +20,6 @@ astr *suite_messages;
 
 char *str = " \t\n\v\f\r A BCDE FGHI JKLM []{}|\\;:,.<>/?`-=~!@#$%^&*()_+ NOPQ RSTU VWXY Z \t\n\v\f\r ";
 
-void test_astr_calc_checksum(void) {
-	astr *as_str;
-	int chk;
-
-	as_str = astr_create(str);
-	chk = astr_calc_checksum(as_str);
-	aut_assert("1 calc checksum", as_str->checksum == chk);
-}
-
 void test_astr_hexdump(void) {
 	astr *as_str;
 	char *dump;
@@ -69,7 +60,6 @@ void test_astr_print(void) {
 
 int main(int argc, char *argv[]) {
 	aut_initialize_suite();
-	aut_run_test(test_astr_calc_checksum);
 	aut_run_test(test_astr_hexdump);
 	aut_run_test(test_astr_print);
 	aut_report();
