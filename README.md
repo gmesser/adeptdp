@@ -1,18 +1,18 @@
 adeptdp
 =======
 
-Adept Data Processing - C LibraryAdept Data Processing Library
+Adept Data Processing C Library
 
 	astr
 	
-		The astr module maintains C strings.  
+		The astr module manages C strings.
 
 	afile
 	
-		An afile instance is a thin wrapper around FILE from standard C.
+		The afile module is a thin wrapper around FILE.
 
 	aclock
 
-		An aclock is a timer that provides stopwatch functionality.
+		The aclock module is a timer that provides stopwatch functionality.
 
 See adeptdp_doc.txt in the docs directory for the documentation.

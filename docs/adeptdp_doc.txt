@@ -47,6 +47,20 @@ Library Modules
 		afile.h - Adept file header.
 		afile.c - Adept file creation, management, and processing functions.
 
+	------------------------------
+	aclock
+
+		An aclock instance is a timer which uses the cpu clock to measure elapsed 
+		time. 
+
+		An aclock measures the number of CPU clock ticks used by the process.  If
+		the process calls sleep() or if the process is interrupted by the operating
+		system, those clock ticks are not included in the number of clock ticks
+		returned to the function by the clock() function.
+		
+		aclock.h - Adept clock header.
+		aclock.c - Adept clock creation and management functions.
+	
 Example Application
 
 	acatfile - A simple implementation of cat.
@@ -143,7 +157,7 @@ Method Documentation
 		to the source astr's string at the end of each token.  You will need to
 		copy the original astr instance if you need it in its original form later.
 
-		Parameter: The astr instance  to be tokenized
+		Parameter: The astr instance to be tokenized
 		Parameter: The string containing the delimiters
 		Returns:   Pointer to the new astr instance
 
@@ -158,7 +172,7 @@ Method Documentation
 		to the source astr's string at the end of each token.  You will need to
 		copy the original astr instance if you need it in its original form later.
 
-		Parameter: The astr instance  to be tokenized
+		Parameter: The astr instance to be tokenized
 		Parameter: The string containing the delimiters
 		Returns:   Pointer to an array of astr pointers.  The last array element
 				will be a NULL pointer for a terminator.
@@ -726,7 +740,7 @@ Method Documentation
 
 		Parameter: The start time
 		Parameter: The end time
-		Returns: The difference in secods between the two times
+		Returns: The difference in seconds between the two times
 
 
 		-----
@@ -734,8 +748,8 @@ Method Documentation
 
 		Get the current CPU clock in seconds.
 
-		This clock measures the number of CPU clock ticks used by the program.  If
-		the program calls sleep() or if the program is interrupted by the operating
+		This clock measures the number of CPU clock ticks used by the process.  If
+		the process calls sleep() or if the process is interrupted by the operating
 		system, those clock ticks are not included in the number of clock ticks
 		returned to the function by the clock() function.
 

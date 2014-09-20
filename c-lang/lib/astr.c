@@ -129,7 +129,7 @@ astr *astr_printf(const char *fmt, ...) {
  * to the source astr's string at the end of each token.  You will need to copy
  * the original astr instance if you need it in its original form later.
  *
- * Parameter: The astr instance  to be tokenized
+ * Parameter: The astr instance to be tokenized
  * Parameter: The string containing the delimiters
  * Returns:   Pointer to the new astr instance
  */
@@ -183,7 +183,7 @@ astr *astr_tok(astr *as, char *delims) {
  * to the source astr's string.  You will need to copy the original astr
  * instance if you need it in its original form later.
  *
- * Parameter: The astr instance  to be tokenized
+ * Parameter: The astr instance to be tokenized
  * Parameter: The string containing the delimiters
  * Returns:   Pointer to an array of astr pointers.  The last array element
  *            will be a NULL pointer for a terminator.
