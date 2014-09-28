@@ -5,6 +5,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include "adatetime.h"
 
@@ -67,6 +68,10 @@ void edit_tm(adatetime *adt);
  *		If the time is unavailable, then -1 is returned.
  */
 
+/*
+ * Edit the tm structure depending on the comparison mode.
+ * May not need this - cmp can be obeyed in comparison functions.
+ */
 void edit_tm(adatetime *adt) {
 	if(adt->cmp == DATEONLY) {
 		adt->loc->tm_hour = 0;
@@ -105,30 +110,55 @@ adatetime *adatetime_create_now(comparison_mode cmp) {
 
 adatetime *adatetime_create_from_time_t(time_t t, comparison_mode cmp) {
 	adatetime *adt = malloc(sizeof(adatetime));
-	adt->time = t;
-	adt->original = t;
 	adt->cmp = cmp;
+	adt->time = t;
+	adt->original = adt->time;
 	adt->gm = malloc(sizeof(struct tm));
-	gmtime_r(&t, adt->gm);
+	gmtime_r(&(adt->time), adt->gm);
 	adt->loc = malloc(sizeof(struct tm));
-	localtime_r(&t, adt->loc);
-	edit_tm(adt);
+	localtime_r(&(adt->time), adt->loc);
+	//edit_tm(adt);
 	return adt;
 }
 
 adatetime *adatetime_create_from_gmtime(struct tm *tm, comparison_mode cmp) {
-	return 0;
+	adatetime *adt = malloc(sizeof(adatetime));
+	adt->cmp = cmp;
+	adt->gm = malloc(sizeof(struct tm));
+	memcpy(adt->gm, tm, sizeof(struct tm));
+	adt->time = timegm(adt->gm);
+	adt->original = adt->time;
+	adt->loc = malloc(sizeof(struct tm));
+	localtime_r(&(adt->time), adt->loc);
+	//edit_tm(adt);
+	return adt;
 }
 
 adatetime *adatetime_create_from_loctime(struct tm *tm, comparison_mode cmp) {
-	return 0;
+	adatetime *adt = malloc(sizeof(adatetime));
+	adt->cmp = cmp;
+	adt->loc = malloc(sizeof(struct tm));
+	memcpy(adt->loc, tm, sizeof(struct tm));
+	adt->time = timelocal(adt->loc);
+	adt->original = adt->time;
+	adt->gm = malloc(sizeof(struct tm));
+	gmtime_r(&(adt->time), adt->gm);
+	//edit_tm(adt);
+	return adt;
 }
 
 adatetime *adatetime_copy(adatetime *adt) {
-	return 0;
+	adatetime *newadt = malloc(sizeof(adatetime));
+	adt->gm = malloc(sizeof(struct tm));
+	adt->loc = malloc(sizeof(struct tm));
+	memcpy(newadt, adt, sizeof(adatetime));
+	return newadt;
 }
 
 adatetime *adatetime_free(adatetime *adt) {
+	free(adt->gm);
+	free(adt->loc);
+	free(adt);
 	return 0;
 }
 
