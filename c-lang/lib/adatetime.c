@@ -9,8 +9,8 @@
 #include <time.h>
 #include "adatetime.h"
 
-// Edit the tm structures as specified by the comparison mode.
-void edit_tm(adatetime *adt);
+// Return the current time.
+time_t now();
 
 /*
  * For reference, here are the standard C time functions (and POSIX versions):
@@ -69,92 +69,49 @@ void edit_tm(adatetime *adt);
  */
 
 /*
- * Edit the tm structure depending on the comparison mode.
- * May not need this - cmp can be obeyed in comparison functions.
- */
-void edit_tm(adatetime *adt) {
-	if(adt->cmp == DATEONLY) {
-		adt->loc->tm_hour = 0;
-		adt->loc->tm_min = 0;
-		adt->loc->tm_sec = 0;
-		adt->gm->tm_hour = 0;
-		adt->gm->tm_min = 0;
-		adt->gm->tm_sec = 0;
-		adt->time = timelocal(adt->loc);
-	}
-	else if(adt->cmp == TIMEONLY) {
-		adt->loc->tm_mday = 0;
-		adt->loc->tm_mon = 0;
-		adt->loc->tm_wday = 0;
-		adt->loc->tm_yday = 0;
-		adt->loc->tm_year = 0;
-		adt->gm->tm_mday = 0;
-		adt->gm->tm_mon = 0;
-		adt->gm->tm_wday = 0;
-		adt->gm->tm_yday = 0;
-		adt->gm->tm_year = 0;
-		adt->time = timelocal(adt->loc);
-	}
-}
-
-/*
  * adatetime_create_now()
  *
  * Create an adatetime instance initialized with the current time.
  */
-adatetime *adatetime_create_now(comparison_mode cmp) {
+adatetime *adatetime_create_now() {
 	time_t t = time(0);
-	adatetime *adt = adatetime_create_from_time_t(t, cmp);
+	adatetime *adt = adatetime_create_from_time_t(t);
 	return adt;
 }
 
-adatetime *adatetime_create_from_time_t(time_t t, comparison_mode cmp) {
-	adatetime *adt = malloc(sizeof(adatetime));
-	adt->cmp = cmp;
-	adt->time = t;
-	adt->original = adt->time;
-	adt->gm = malloc(sizeof(struct tm));
-	gmtime_r(&(adt->time), adt->gm);
-	adt->loc = malloc(sizeof(struct tm));
-	localtime_r(&(adt->time), adt->loc);
-	//edit_tm(adt);
+adatetime *adatetime_create_from_time_t(time_t t) {
+	adatetime *adt = adatetime_allocate();
+	adatetime_set_from_time_t(adt, t);
 	return adt;
 }
 
-adatetime *adatetime_create_from_gmtime(struct tm *tm, comparison_mode cmp) {
-	adatetime *adt = malloc(sizeof(adatetime));
-	adt->cmp = cmp;
-	adt->gm = malloc(sizeof(struct tm));
-	memcpy(adt->gm, tm, sizeof(struct tm));
-	adt->time = timegm(adt->gm);
-	adt->original = adt->time;
-	adt->loc = malloc(sizeof(struct tm));
-	localtime_r(&(adt->time), adt->loc);
-	//edit_tm(adt);
+adatetime *adatetime_create_from_gmtime(struct tm *gmtm) {
+	adatetime *adt = adatetime_allocate();
+	adatetime_set_from_gmtime(adt, gmtm);
 	return adt;
 }
 
-adatetime *adatetime_create_from_loctime(struct tm *tm, comparison_mode cmp) {
-	adatetime *adt = malloc(sizeof(adatetime));
-	adt->cmp = cmp;
-	adt->loc = malloc(sizeof(struct tm));
-	memcpy(adt->loc, tm, sizeof(struct tm));
-	adt->time = timelocal(adt->loc);
-	adt->original = adt->time;
-	adt->gm = malloc(sizeof(struct tm));
-	gmtime_r(&(adt->time), adt->gm);
-	//edit_tm(adt);
+adatetime *adatetime_create_from_loctime(struct tm *loctm) {
+	adatetime *adt = adatetime_allocate();
+	adatetime_set_from_localtime(adt, loctm);
 	return adt;
 }
 
 adatetime *adatetime_copy(adatetime *adt) {
-	adatetime *newadt = malloc(sizeof(adatetime));
-	adt->gm = malloc(sizeof(struct tm));
-	adt->loc = malloc(sizeof(struct tm));
-	memcpy(newadt, adt, sizeof(adatetime));
-	return newadt;
+	adatetime *copyadt = adatetime_allocate();
+	memcpy(copyadt, adt, sizeof(adatetime));
+	return copyadt;
 }
 
+// Allocate the memory for an adatetime structure.
+adatetime *adatetime_allocate() {
+	adatetime *adt = calloc(1, sizeof(adatetime));
+	adt->gm = calloc(1, sizeof(struct tm));
+	adt->loc = calloc(1, sizeof(struct tm));
+	return adt;
+}
+
+// Free the memory that was allocated for an adatetime structure.
 adatetime *adatetime_free(adatetime *adt) {
 	free(adt->gm);
 	free(adt->loc);
@@ -167,30 +124,68 @@ adatetime *adatetime_diff(adatetime *left, adatetime *right) {
 }
 
 void adatetime_set_now(adatetime *adt) {
-
+	time_t t = now();
+	adatetime_set_from_time_t(adt, t);
 }
 
 void adatetime_set_from_time_t(adatetime *adt, time_t t) {
-
+	adt->time = t;
+	if(adt->original == 0) {
+		adt->original = adt->time;
+	}
+	gmtime_r(&(adt->time), adt->gm);
+	localtime_r(&(adt->time), adt->loc);
 }
 
 void adatetime_set_from_gmtime(adatetime *adt, struct tm *tm) {
-
+	memcpy(adt->gm, tm, sizeof(struct tm));
+	adt->time = timegm(adt->gm);
+	if(adt->original == 0) {
+		adt->original = adt->time;
+	}
+	localtime_r(&(adt->time), adt->loc);
 }
 
 void adatetime_set_from_localtime(adatetime *adt, struct tm *tm) {
-
+	memcpy(adt->loc, tm, sizeof(struct tm));
+	adt->time = timelocal(adt->loc);
+	if(adt->original == 0) {
+		adt->original = adt->time;
+	}
+	gmtime_r(&(adt->time), adt->gm);
 }
 
-void adatetime_set_comparison_mode(adatetime *adt, comparison_mode mode) {
+int adatetime_compare(adatetime *left, adatetime *right, comparison_mode cmp) {
+	int result = 0;
+	if(cmp == DATEONLY) {
+		result = adatetime_compare_date(left, right);
+	}
+	else if(cmp == TIMEONLY) {
+		result = adatetime_compare_time(left, right);
+	}
+	else {
+		result = adatetime_compare_date(left, right);
+		if(result == 0)
+		{
+			result = adatetime_compare_time(left, right);
+		}
+	}
 
+	return result;
 }
 
-int adatetime_compare(adatetime *left, adatetime *right) {
+/*
+ * Determine if left is less than (earlier, before) right.
+ * Return 1 is true, 0 if false;
+ */
+int adatetime_lessthan(adatetime *left, adatetime *right, comparison_mode cmp) {
+	return adatetime_compare(left, right, cmp) < 0 ? 1 : 0;
+}
+
+int adatetime_compare_date(adatetime *left, adatetime *right) {
 	return 0;
 }
 
-int adatetime_lessthan(adatetime *left, adatetime *right) {
+int adatetime_compare_time(adatetime *left, adatetime *right) {
 	return 0;
 }
-

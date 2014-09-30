@@ -46,25 +46,27 @@ typedef struct {
 	time_t time;		// The time, filtered.
 	struct tm *gm;		// The Greenwich mean time, filtered.
 	struct tm *loc;	// The local time, filtered.
-	comparison_mode cmp;	// The comparison mode.
 } adatetime;
 
-adatetime *adatetime_create_now(comparison_mode cmp);
-adatetime *adatetime_create_from_time_t(time_t t, comparison_mode cmp);
-adatetime *adatetime_create_from_gmtime(struct tm *tm, comparison_mode cmp);
-adatetime *adatetime_create_from_loctime(struct tm *tm, comparison_mode cmp);
-adatetime *adatetime_copy(adatetime *adt);
+adatetime *adatetime_allocate();
 adatetime *adatetime_free(adatetime *adt);
+adatetime *adatetime_create_now();
+adatetime *adatetime_create_from_time_t(time_t t);
+adatetime *adatetime_create_from_gmtime(struct tm *tm);
+adatetime *adatetime_create_from_loctime(struct tm *tm);
+adatetime *adatetime_copy(adatetime *adt);
 adatetime *adatetime_diff(adatetime *left, adatetime *right);
 
 void adatetime_set_now(adatetime *adt);
 void adatetime_set_from_time_t(adatetime *adt, time_t t);
 void adatetime_set_from_gmtime(adatetime *adt, struct tm *tm);
 void adatetime_set_from_localtime(adatetime *adt, struct tm *tm);
-void adatetime_set_comparison_mode(adatetime *adt, comparison_mode mode);
 
-int adatetime_compare(adatetime *left, adatetime *right);
-int adatetime_lessthan(adatetime *left, adatetime *right);
+int adatetime_compare(adatetime *left, adatetime *right, comparison_mode cmp);
+int adatetime_lessthan(adatetime *left, adatetime *right, comparison_mode cmp);
+
+int adatetime_compare_date(adatetime *left, adatetime *right);
+int adatetime_compare_time(adatetime *left, adatetime *right);
 
 #ifdef	__cplusplus
 }
