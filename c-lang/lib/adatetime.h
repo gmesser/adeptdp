@@ -51,14 +51,14 @@ typedef struct {
 adatetime *adatetime_allocate();
 adatetime *adatetime_free(adatetime *adt);
 adatetime *adatetime_create_now();
-adatetime *adatetime_create_from_time_t(time_t t);
+adatetime *adatetime_create_from_time_t(time_t *t);
 adatetime *adatetime_create_from_gmtime(struct tm *tm);
 adatetime *adatetime_create_from_loctime(struct tm *tm);
 adatetime *adatetime_copy(adatetime *adt);
 adatetime *adatetime_diff(adatetime *left, adatetime *right);
 
 void adatetime_set_now(adatetime *adt);
-void adatetime_set_from_time_t(adatetime *adt, time_t t);
+void adatetime_set_from_time_t(adatetime *adt, time_t *t);
 void adatetime_set_from_gmtime(adatetime *adt, struct tm *tm);
 void adatetime_set_from_localtime(adatetime *adt, struct tm *tm);
 

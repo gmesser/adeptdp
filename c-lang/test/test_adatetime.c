@@ -60,7 +60,7 @@ void test_adatetime_create_now() {
 
 void test_adatetime_create_from_time_t() {
 	time_t t1 = time(0);
-	adatetime *adt1 = adatetime_create_from_time_t(t1);
+	adatetime *adt1 = adatetime_create_from_time_t(&t1);
 	aut_assert("test_adatetime_create_from_time_t", adt1 != NULL);
 	printf("\nCreated from time_t...\n");
 	print_adatetime(adt1);
@@ -84,6 +84,41 @@ void test_adatetime_create_from_loctime() {
 	print_adatetime(adt1);
 }
 
+void test_adatetime_compare() {
+	time_t tnow, tsecless, tminless, thourless, tdayless, tmonless, tyearless;
+
+	tnow = time(0);
+	tsecless = tnow - 1;
+	tminless = tnow - 60;
+	thourless = tnow - (60 * 60);
+	tdayless = tnow - (60 * 60 * 24);
+	tmonless = tnow - (60 * 60 * 24 * 31);
+	tyearless = tnow - (60 * 60 * 24 * 366);
+
+	adatetime *adtnow = adatetime_create_from_time_t(&tnow);
+	adatetime *adtnow2 = adatetime_create_from_time_t(&tnow);
+	adatetime *adtsecless = adatetime_create_from_time_t(&tsecless);
+	adatetime *adtminless = adatetime_create_from_time_t(&tminless);
+	adatetime *adthourless = adatetime_create_from_time_t(&thourless);
+	adatetime *adtdayless = adatetime_create_from_time_t(&tdayless);
+	adatetime *adtmonless = adatetime_create_from_time_t(&tmonless);
+	adatetime *adtyearless = adatetime_create_from_time_t(&tyearless);
+
+	aut_assert("now test_adatetime_create_from_time_t", adtnow != NULL);
+	aut_assert("sec less test_adatetime_create_from_time_t", adtsecless != NULL);
+	aut_assert("min less test_adatetime_create_from_time_t", adtminless != NULL);
+	aut_assert("hour less test_adatetime_create_from_time_t", adthourless != NULL);
+	aut_assert("day less test_adatetime_create_from_time_t", adtdayless != NULL);
+	aut_assert("mon less test_adatetime_create_from_time_t", adtmonless != NULL);
+	aut_assert("year less test_adatetime_create_from_time_t", adtyearless != NULL);
+
+	aut_assert("now == now2", adatetime_compare(adtnow, adtnow2, DATEANDTIME) == 0);
+	aut_assert("now == now2", adatetime_compare(adtnow, adtnow2, DATEONLY) == 0);
+	aut_assert("now == now2", adatetime_compare(adtnow, adtnow2, TIMEONLY) == 0);
+	
+	aut_assert("year less < mon less", adatetime_compare(adtyearless, adtmonless, DATEANDTIME) < 0);
+}
+
 // ----------
 
 int main(int argc, char *argv[]) {
@@ -92,6 +127,7 @@ int main(int argc, char *argv[]) {
 	aut_run_test(test_adatetime_create_from_time_t);
 	aut_run_test(test_adatetime_create_from_gmtime);
 	aut_run_test(test_adatetime_create_from_loctime);
+	aut_run_test(test_adatetime_compare);
 	aut_report();
 	aut_terminate_suite();
 	aut_return();

@@ -83,11 +83,11 @@ int compare_int(int left, int right);
  */
 adatetime *adatetime_create_now() {
 	time_t t = time(0);
-	adatetime *adt = adatetime_create_from_time_t(t);
+	adatetime *adt = adatetime_create_from_time_t(&t);
 	return adt;
 }
 
-adatetime *adatetime_create_from_time_t(time_t t) {
+adatetime *adatetime_create_from_time_t(time_t *t) {
 	adatetime *adt = adatetime_allocate();
 	adatetime_set_from_time_t(adt, t);
 	return adt;
@@ -133,11 +133,11 @@ adatetime *adatetime_diff(adatetime *left, adatetime *right) {
 
 void adatetime_set_now(adatetime *adt) {
 	time_t t = time(0);
-	adatetime_set_from_time_t(adt, t);
+	adatetime_set_from_time_t(adt, &t);
 }
 
-void adatetime_set_from_time_t(adatetime *adt, time_t t) {
-	adt->time = t;
+void adatetime_set_from_time_t(adatetime *adt, time_t *t) {
+	adt->time = *t;
 	if(adt->original == 0) {
 		adt->original = adt->time;
 	}
