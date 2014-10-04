@@ -1,7 +1,7 @@
 // adatetime.h - Adept Date and Time
 
 #ifndef ADATETIME_H
-#define	ADATETIME_H
+#define ADATETIME_H
 
 #include <time.h>
 

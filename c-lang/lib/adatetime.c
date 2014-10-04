@@ -132,7 +132,7 @@ adatetime *adatetime_diff(adatetime *left, adatetime *right) {
 }
 
 void adatetime_set_now(adatetime *adt) {
-	time_t t = now();
+	time_t t = time(0);
 	adatetime_set_from_time_t(adt, t);
 }
 
