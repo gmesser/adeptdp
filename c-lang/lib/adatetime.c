@@ -207,13 +207,13 @@ int adatetime_lessthan(adatetime *left, adatetime *right, comparison_mode cmp) {
  */
 int adatetime_compare_date(adatetime *left, adatetime *right) {
 	int result = 0;
-	if ((result = compare_int(left->loc->tm_mday, right->loc->tm_mday)) != 0) {
+	if ((result = compare_int(left->loc->tm_year, right->loc->tm_year)) != 0) {
 		return result;
 	}
 	if ((result = compare_int(left->loc->tm_mon, right->loc->tm_mon)) != 0) {
 		return result;
 	}
-	if ((result = compare_int(left->loc->tm_year, right->loc->tm_year)) != 0) {
+	if ((result = compare_int(left->loc->tm_mday, right->loc->tm_mday)) != 0) {
 		return result;
 	}
 	return 0;
@@ -224,13 +224,13 @@ int adatetime_compare_date(adatetime *left, adatetime *right) {
  */
 int adatetime_compare_time(adatetime *left, adatetime *right) {
 	int result = 0;
-	if ((result = compare_int(left->loc->tm_sec, right->loc->tm_sec)) != 0) {
+	if ((result = compare_int(left->loc->tm_hour, right->loc->tm_hour)) != 0) {
 		return result;
 	}
 	if ((result = compare_int(left->loc->tm_min, right->loc->tm_min)) != 0) {
 		return result;
 	}
-	if ((result = compare_int(left->loc->tm_hour, right->loc->tm_hour)) != 0) {
+	if ((result = compare_int(left->loc->tm_sec, right->loc->tm_sec)) != 0) {
 		return result;
 	}
 	return 0;
