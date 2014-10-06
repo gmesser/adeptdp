@@ -55,7 +55,6 @@ adatetime *adatetime_create_from_time_t(time_t *t);
 adatetime *adatetime_create_from_gmtime(struct tm *tm);
 adatetime *adatetime_create_from_loctime(struct tm *tm);
 adatetime *adatetime_copy(adatetime *adt);
-adatetime *adatetime_diff(adatetime *left, adatetime *right);
 
 void adatetime_set_now(adatetime *adt);
 void adatetime_set_from_time_t(adatetime *adt, time_t *t);

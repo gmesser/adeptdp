@@ -87,27 +87,59 @@ adatetime *adatetime_create_now() {
 	return adt;
 }
 
+/*
+ * adatetime_create_from_time_t()
+ *
+ * Create an adatetime instance initialized with the specified time.
+ */
 adatetime *adatetime_create_from_time_t(time_t *t) {
-	adatetime *adt = adatetime_allocate();
-	adatetime_set_from_time_t(adt, t);
+	adatetime *adt = NULL;
+	if (t != NULL) {
+		adt = adatetime_allocate();
+		adatetime_set_from_time_t(adt, t);
+	}
 	return adt;
 }
 
+/*
+ * adatetime_create_from_gmtime()
+ *
+ * Create an adatetime instance initialized with the specified gm time.
+ */
 adatetime *adatetime_create_from_gmtime(struct tm *gmtm) {
-	adatetime *adt = adatetime_allocate();
-	adatetime_set_from_gmtime(adt, gmtm);
+	adatetime *adt = NULL;
+	if (gmtm != NULL) {
+		adt = adatetime_allocate();
+		adatetime_set_from_gmtime(adt, gmtm);
+	}
 	return adt;
 }
 
+/*
+ * adatetime_create_from_loctime()
+ *
+ * Create an adatetime instance initialized with the specified local time.
+ */
 adatetime *adatetime_create_from_loctime(struct tm *loctm) {
-	adatetime *adt = adatetime_allocate();
-	adatetime_set_from_localtime(adt, loctm);
+	adatetime *adt = NULL;
+	if (loctm != NULL) {
+		adt = adatetime_allocate();
+		adatetime_set_from_localtime(adt, loctm);
+	}
 	return adt;
 }
 
+/*
+ * adatetime_copy()
+ *
+ * Create an adatetime instance that is copied from the specified adatetime instance.
+*/
 adatetime *adatetime_copy(adatetime *adt) {
-	adatetime *copyadt = adatetime_allocate();
-	memcpy(copyadt, adt, sizeof(adatetime));
+	adatetime *copyadt = NULL;
+	if (adt != NULL) {
+		copyadt = adatetime_allocate();
+		memcpy(copyadt, adt, sizeof (adatetime));
+	}
 	return copyadt;
 }
 
@@ -121,61 +153,115 @@ adatetime *adatetime_allocate() {
 
 // Free the memory that was allocated for an adatetime structure.
 adatetime *adatetime_free(adatetime *adt) {
-	free(adt->gm);
-	free(adt->loc);
-	free(adt);
-	return 0;
+	if(adt != NULL) {
+		if(adt->gm != NULL) {
+			free(adt->gm);
+		}
+		if(adt->loc != NULL) {
+			free(adt->loc);
+		}
+		free(adt);
+	}
+	return NULL;
 }
 
-adatetime *adatetime_diff(adatetime *left, adatetime *right) {
-	return 0;
-}
-
+/*
+ * adatetime_set_now()
+ *
+ * Set or create an adatetime instance initialized with the current time.
+ */
 void adatetime_set_now(adatetime *adt) {
 	time_t t = time(0);
-	adatetime_set_from_time_t(adt, &t);
-}
-
-void adatetime_set_from_time_t(adatetime *adt, time_t *t) {
-	adt->time = *t;
-	if(adt->original == 0) {
-		adt->original = adt->time;
-	}
-	gmtime_r(&(adt->time), adt->gm);
-	localtime_r(&(adt->time), adt->loc);
-}
-
-void adatetime_set_from_gmtime(adatetime *adt, struct tm *tm) {
-	memcpy(adt->gm, tm, sizeof(struct tm));
-	adt->time = timegm(adt->gm);
-	if(adt->original == 0) {
-		adt->original = adt->time;
-	}
-	localtime_r(&(adt->time), adt->loc);
-}
-
-void adatetime_set_from_localtime(adatetime *adt, struct tm *tm) {
-	memcpy(adt->loc, tm, sizeof(struct tm));
-	adt->time = timelocal(adt->loc);
-	if(adt->original == 0) {
-		adt->original = adt->time;
-	}
-	gmtime_r(&(adt->time), adt->gm);
-}
-
-int adatetime_compare(adatetime *left, adatetime *right, comparison_mode cmp) {
-	int result = 0;
-	if(cmp == DATEONLY) {
-		result = adatetime_compare_date(left, right);
-	}
-	else if(cmp == TIMEONLY) {
-		result = adatetime_compare_time(left, right);
+	if(adt == NULL) {
+		adatetime_create_from_time_t(&t);
 	}
 	else {
-		result = adatetime_compare_date(left, right);
-		if(result == 0)
-		{
-			result = adatetime_compare_time(left, right);
+		adatetime_set_from_time_t(adt, &t);
+	}
+}
+
+/*
+ * adatetime_set_from_time_t()
+ *
+ * Set or create an adatetime instance initialized with the specified time.
+ */
+void adatetime_set_from_time_t(adatetime *adt, time_t *t) {
+	if (adt == NULL) {
+		adt = adatetime_create_from_time_t(t);
+	}
+	else {
+		if (t != NULL) {
+			adt->time = *t;
+			if (adt->original == 0) {
+				adt->original = adt->time;
+			}
+			gmtime_r(&(adt->time), adt->gm);
+			localtime_r(&(adt->time), adt->loc);
+		}
+	}
+}
+
+/*
+ * adatetime_set_from_gmtime()
+ *
+ * Set or create an adatetime instance initialized with the specified gm time.
+ */
+void adatetime_set_from_gmtime(adatetime *adt, struct tm *tm) {
+	if (adt == NULL) {
+		adt = adatetime_create_from_gmtime(tm);
+	}
+	else {
+		if (tm != NULL) {
+			memcpy(adt->gm, tm, sizeof (struct tm));
+			adt->time = timegm(adt->gm);
+			if (adt->original == 0) {
+				adt->original = adt->time;
+			}
+			localtime_r(&(adt->time), adt->loc);
+		}
+	}
+}
+
+/*
+ * adatetime_set_from_loctime()
+ *
+ * Set or create an adatetime instance initialized with the specified local time.
+ */
+void adatetime_set_from_localtime(adatetime *adt, struct tm *tm) {
+	if (adt == NULL) {
+		adt = adatetime_create_from_loctime(tm);
+	}
+	else {
+		if (tm != NULL) {
+			memcpy(adt->loc, tm, sizeof (struct tm));
+			adt->time = timelocal(adt->loc);
+			if (adt->original == 0) {
+				adt->original = adt->time;
+			}
+			gmtime_r(&(adt->time), adt->gm);
+		}
+	}
+}
+
+/*
+ * Compare two adatetime instances.
+ */
+int adatetime_compare(adatetime *left, adatetime *right, comparison_mode cmp) {
+	int result = 0;
+	if (left != NULL && right != NULL) {
+		if (left != right) {
+			if (cmp == DATEONLY) {
+				result = adatetime_compare_date(left, right);
+			}
+			else if (cmp == TIMEONLY) {
+				result = adatetime_compare_time(left, right);
+			}
+			else {
+				result = adatetime_compare_date(left, right);
+				if (result == 0) {
+					result = adatetime_compare_time(left, right);
+				}
+			}
 		}
 	}
 
@@ -203,39 +289,50 @@ int adatetime_lessthan(adatetime *left, adatetime *right, comparison_mode cmp) {
 //  const char *tm_zone;		/* Timezone abbreviation.  */
 
 /*
- * Compare the date components of a struct tm.
+ * Compare the date components of two adatetime instances.
  */
 int adatetime_compare_date(adatetime *left, adatetime *right) {
 	int result = 0;
-	if ((result = compare_int(left->loc->tm_year, right->loc->tm_year)) != 0) {
-		return result;
-	}
-	if ((result = compare_int(left->loc->tm_mon, right->loc->tm_mon)) != 0) {
-		return result;
-	}
-	if ((result = compare_int(left->loc->tm_mday, right->loc->tm_mday)) != 0) {
-		return result;
+	if (left != right) {
+		if (left != NULL && right != NULL) {
+			if ((result = compare_int(left->loc->tm_year, right->loc->tm_year)) != 0) {
+				return result;
+			}
+			if ((result = compare_int(left->loc->tm_mon, right->loc->tm_mon)) != 0) {
+				return result;
+			}
+			if ((result = compare_int(left->loc->tm_mday, right->loc->tm_mday)) != 0) {
+				return result;
+			}
+		}
 	}
 	return 0;
 }
 
 /*
- * Compare the time components of a struct tm.
+ * Compare the time components of two adatetime instances.
  */
 int adatetime_compare_time(adatetime *left, adatetime *right) {
 	int result = 0;
-	if ((result = compare_int(left->loc->tm_hour, right->loc->tm_hour)) != 0) {
-		return result;
-	}
-	if ((result = compare_int(left->loc->tm_min, right->loc->tm_min)) != 0) {
-		return result;
-	}
-	if ((result = compare_int(left->loc->tm_sec, right->loc->tm_sec)) != 0) {
-		return result;
+	if (left != right) {
+		if (left != NULL && right != NULL) {
+			if ((result = compare_int(left->loc->tm_hour, right->loc->tm_hour)) != 0) {
+				return result;
+			}
+			if ((result = compare_int(left->loc->tm_min, right->loc->tm_min)) != 0) {
+				return result;
+			}
+			if ((result = compare_int(left->loc->tm_sec, right->loc->tm_sec)) != 0) {
+				return result;
+			}
+		}
 	}
 	return 0;
 }
 
+/*
+ * Compare two integers.
+ */
 int compare_int(int left, int right) {
 	return left - right;
 }
