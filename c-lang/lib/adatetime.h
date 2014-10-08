@@ -6,9 +6,9 @@
 #include <time.h>
 
 /*
- * A date and time module with date and time elements initialized according to
- * a comparison mode which will determine how the instances will compare to each
- * other.
+ * A date and time module with date and time elements with
+ * a comparison mode which will determine how the instances
+ * will compare to each other.
  * 
  * DATEANDTIME comparison mode: date and time components will influence comparisons.
  *   The adatetime instance will be created with all components set
@@ -39,7 +39,7 @@
 extern "C" {
 #endif
 
-typedef enum { DATEONLY, TIMEONLY, DATEANDTIME } comparison_mode;
+typedef enum { DATEONLY, TIMEONLY, DATEANDTIME } adatetime_comparison_mode;
 
 typedef struct {
 	time_t original;	// The original time, before the comparison mode was applied.
@@ -54,15 +54,21 @@ adatetime *adatetime_create_now();
 adatetime *adatetime_create_from_time_t(time_t *t);
 adatetime *adatetime_create_from_gmtime(struct tm *tm);
 adatetime *adatetime_create_from_loctime(struct tm *tm);
-adatetime *adatetime_copy(adatetime *adt);
+
+adatetime *adatetime_copy(adatetime *dst, adatetime *src);
+
+adatetime *adatetime_earliest(adatetime *adt1, adatetime *adt2, adatetime_comparison_mode cmp);
+adatetime *adatetime_latest(adatetime *adt1, adatetime *adt2, adatetime_comparison_mode cmp);
 
 void adatetime_set_now(adatetime *adt);
 void adatetime_set_from_time_t(adatetime *adt, time_t *t);
 void adatetime_set_from_gmtime(adatetime *adt, struct tm *tm);
 void adatetime_set_from_localtime(adatetime *adt, struct tm *tm);
 
-int adatetime_compare(adatetime *left, adatetime *right, comparison_mode cmp);
-int adatetime_lessthan(adatetime *left, adatetime *right, comparison_mode cmp);
+int adatetime_compare(adatetime *left, adatetime *right, adatetime_comparison_mode cmp);
+int adatetime_is_equal(adatetime *left, adatetime *right, adatetime_comparison_mode cmp);
+int adatetime_is_before(adatetime *left, adatetime *right, adatetime_comparison_mode cmp);
+int adatetime_is_after(adatetime *left, adatetime *right, adatetime_comparison_mode cmp);
 
 int adatetime_compare_date(adatetime *left, adatetime *right);
 int adatetime_compare_time(adatetime *left, adatetime *right);
