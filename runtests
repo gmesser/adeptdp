@@ -9,5 +9,7 @@ TESTS_STARTED=`date`
 ./c-lang/test/test_afile
 ./c-lang/test/test_afile_process
 ./c-lang/test/test_aclock
+./c-lang/test/test_adatetime
+./c-lang/test/test_adatetime_range
 TESTS_ENDED=`date`
 echo "Tests started $TESTS_STARTED, ended $TESTS_ENDED"
