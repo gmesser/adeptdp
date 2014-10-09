@@ -49,7 +49,7 @@ typedef struct {
 } atm;
 
 atm *atm_allocate();
-atm *atm_free(atm *adt);
+atm *atm_free(atm *at);
 atm *atm_create_now();
 atm *atm_create_from_time_t(time_t *t);
 atm *atm_create_from_gmtime(struct tm *tm);
@@ -57,21 +57,21 @@ atm *atm_create_from_loctime(struct tm *tm);
 
 atm *atm_copy(atm *dst, atm *src);
 
-atm *atm_earliest(atm *adt1, atm *adt2, atm_comparison_mode cmp);
-atm *atm_latest(atm *adt1, atm *adt2, atm_comparison_mode cmp);
-
-void atm_set_now(atm *adt);
-void atm_set_from_time_t(atm *adt, time_t *t);
-void atm_set_from_gmtime(atm *adt, struct tm *tm);
-void atm_set_from_localtime(atm *adt, struct tm *tm);
+void atm_set_now(atm *at);
+void atm_set_from_time_t(atm *at, time_t *t);
+void atm_set_from_gmtime(atm *at, struct tm *tm);
+void atm_set_from_localtime(atm *at, struct tm *tm);
 
 int atm_compare(atm *left, atm *right, atm_comparison_mode cmp);
+int atm_compare_date(atm *left, atm *right);
+int atm_compare_time(atm *left, atm *right);
+
 int atm_is_equal(atm *left, atm *right, atm_comparison_mode cmp);
 int atm_is_before(atm *left, atm *right, atm_comparison_mode cmp);
 int atm_is_after(atm *left, atm *right, atm_comparison_mode cmp);
 
-int atm_compare_date(atm *left, atm *right);
-int atm_compare_time(atm *left, atm *right);
+atm *atm_earliest(atm *at1, atm *at2, atm_comparison_mode cmp);
+atm *atm_latest(atm *at1, atm *at2, atm_comparison_mode cmp);
 
 #ifdef	__cplusplus
 }

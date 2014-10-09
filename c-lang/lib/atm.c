@@ -9,114 +9,101 @@
 #include <time.h>
 #include "atm.h"
 
-// Return the current system time.
-time_t now();
+int compare_int(int left, int right);
+
+// ---------------------------------------------------------------------------
 
 /*
  * Compare two integers.
- * Return the result of subtracting right from left.
- * The return will either be a number less than, equal to, or greater than zero
- * indicating that left is less than, equal to, or greater than right.
+ * Returns the result of subtracting right from left.
+ *
+ * Return a number less than, equal to, or greater than zero if
+ * left is less than, equal to, or greater than right, respectively.
  */
-int compare_int(int left, int right);
+int compare_int(int left, int right) {
+	return left - right;
+}
 
 /*
- * For reference, here are the standard C time functions (and POSIX versions):
+ * Allocate the memory for an atm structure.
  *
- * char *asctime(const struct tm *timeptr);
- *		Returns a pointer to a string which represents the day and time of the structure timeptr. The string is in the following format:
- *		DDD MMM dd hh:mm:ss YYYY
- *			DDD	Day of the week (Sun, Mon, Tue, Wed, Thu, Fri, Sat)
- *			MMM	Month of the year (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec)
- *			dd	Day of the month (1,...,31)
- *			hh	Hour (0,...,23)
- *			mm 	Minute (0,...,59)
- *			ss	Second (0,...,59)
- *			YYYY	Year
- *    The string is terminated with a newline character and a null character.
- *		The string is always 26 characters long (including the terminating newline and null characters).
- *
- * clock_t clock(void);
- *		Returns the processor clock time used since the beginning of an implementation-defined era (normally the beginning of the program).
- *		The returned value divided by CLOCKS_PER_SEC results in the number of seconds. If the value is unavailable, then -1 is returned.
- *
- * char *ctime(const time_t *timer);
- *     Returns a string representing the localtime based on the argument timer. This is equivalent to:
- *     asctime(locatime(timer));
- *
- * double difftime(time_t time1, time_t time2);
- *		Calculates the difference of seconds between time1 and time2 (time1-time2).
- *
- * struct tm *gmtime(const time_t *timer);
- * struct tm *gmtime_r (const time_t *time, struct tm *resultp);
- *		The value of timer is broken up into the structure tm and expressed in Coordinated Universal Time (UTC) also known as Greenwich Mean Time (GMT).
- *		A null pointer is returned if UTC is not available.
- *
- * struct tm *localtime(const time_t *timer);
- * struct tm *localtime_r (const time_t *time, struct tm *resultp);
- *		The value of timer is broken up into the structure tm and expressed in the local time zone.
- *
- * time_t mktime(struct tm *timeptr);
- * time_t timelocal (struct tm *brokentime);
- * time_t timegm (struct tm *brokentime);
- *		Converts the structure pointed to by timeptr into a time_t value according to the local time zone.
- *		The values in the structure are not limited to their constraints. If they exceed their bounds,
- *		then they are adjusted accordingly so that they fit within their bounds.
- *		The original values of tm_wday (day of the week) and tm_yday (day of the year) are ignored,
- *		but are set correctly after the other values have been constrained.
- *		tm_mday (day of the month) is not corrected until after tm_mon and tm_year are corrected.
- *		After adjustment the structure still represents the same time.
- *		If the calendar time cannot be represented, then -1 is returned.
- *
- * size_t strftime(char *str, size_t maxsize, const char *format, const struct tm *timeptr);
- * 
- * time_t time(time_t *timer);
- *		Calculates the current calender time and encodes it into time_t format.
- *		The time_t value is returned. If timer is not a null pointer, then the value is also stored into the object it points to.
- *		If the time is unavailable, then -1 is returned.
+ * Allocates the memory for the enclosing structure and for the components.
  */
+atm *atm_allocate() {
+	atm *at = calloc(1, sizeof(atm));
+	at->gm = calloc(1, sizeof(struct tm));
+	at->loc = calloc(1, sizeof(struct tm));
+	return at;
+}
 
-// Create an atm instance initialized with the current time.
+/*
+ * Free the memory that was allocated for an atm structure.
+ */
+atm *atm_free(atm *at) {
+	if(at != NULL) {
+		if(at->gm != NULL) {
+			free(at->gm);
+		}
+		if(at->loc != NULL) {
+			free(at->loc);
+		}
+		free(at);
+	}
+	return NULL;
+}
+
+/*
+ * Create an atm instance initialized with the current time.
+ */
 atm *atm_create_now() {
 	time_t t = time(0);
-	atm *adt = atm_create_from_time_t(&t);
-	return adt;
+	atm *at = atm_create_from_time_t(&t);
+	return at;
 }
 
-// Create an atm instance initialized with the specified time.
+/*
+ * Create an atm instance initialized with the specified time.
+ */
 atm *atm_create_from_time_t(time_t *t) {
-	atm *adt = NULL;
+	atm *at = NULL;
 	if (t != NULL) {
-		adt = atm_allocate();
-		atm_set_from_time_t(adt, t);
+		at = atm_allocate();
+		atm_set_from_time_t(at, t);
 	}
-	return adt;
+	return at;
 }
 
-// Create an atm instance initialized with the specified gm time.
+/*
+ * Create an atm instance initialized with the specified gm time.
+ */
 atm *atm_create_from_gmtime(struct tm *gmtm) {
-	atm *adt = NULL;
+	atm *at = NULL;
 	if (gmtm != NULL) {
-		adt = atm_allocate();
-		atm_set_from_gmtime(adt, gmtm);
+		at = atm_allocate();
+		atm_set_from_gmtime(at, gmtm);
 	}
-	return adt;
+	return at;
 }
 
-// Create an atm instance initialized with the specified local time.
+/*
+ * Create an atm instance initialized with the specified local time.
+ */
 atm *atm_create_from_loctime(struct tm *loctm) {
-	atm *adt = NULL;
+	atm *at = NULL;
 	if (loctm != NULL) {
-		adt = atm_allocate();
-		atm_set_from_localtime(adt, loctm);
+		at = atm_allocate();
+		atm_set_from_localtime(at, loctm);
 	}
-	return adt;
+	return at;
 }
 
-// Create an atm instance that is copied from the specified atm instance.
+/*
+ * Create a copy of an atm instance.
+ */
 atm *atm_copy(atm *dst, atm *src) {
 	if (src != NULL) {
-		if(dst == NULL) {
+		if(dst != NULL) {
+			dst = atm_free(dst);
 			dst = atm_allocate();
 		}
 		dst->time = src->time;
@@ -127,121 +114,71 @@ atm *atm_copy(atm *dst, atm *src) {
 	return dst;
 }
 
-// Determine which of the two atm instances is the earliest time.
-atm *atm_earliest(atm *adt1, atm *adt2, atm_comparison_mode cmp) {
-	atm *adt = NULL;
-	if (adt1 != NULL && adt2 != NULL) {
-		if(atm_is_before(adt1, adt2, cmp)) {
-			adt = adt1;
-		}
-		else {
-			adt = adt2;
-		}
-	}
-
-	return adt;
-}
-
-// Determine which of the two atm instances is the latest time.
-atm *atm_latest(atm *adt1, atm *adt2, atm_comparison_mode cmp) {
-	atm *adt = NULL;
-	if (adt1 != NULL && adt2 != NULL) {
-		if(atm_is_after(adt1, adt2, cmp)) {
-			adt = adt1;
-		}
-		else {
-			adt = adt2;
-		}
-	}
-
-	return adt;
-}
-
-// Allocate the memory for an atm structure.
-atm *atm_allocate() {
-	atm *adt = calloc(1, sizeof(atm));
-	adt->gm = calloc(1, sizeof(struct tm));
-	adt->loc = calloc(1, sizeof(struct tm));
-	return adt;
-}
-
-// Free the memory that was allocated for an atm structure.
-atm *atm_free(atm *adt) {
-	if(adt != NULL) {
-		if(adt->gm != NULL) {
-			free(adt->gm);
-		}
-		if(adt->loc != NULL) {
-			free(adt->loc);
-		}
-		free(adt);
-	}
-	return NULL;
-}
-
-// Set or create an atm instance initialized with the current time.
-void atm_set_now(atm *adt) {
+/*
+ * Set or create an atm instance initialized with the current time.
+ */
+void atm_set_now(atm *at) {
 	time_t t = time(0);
-	if(adt == NULL) {
-		atm_create_from_time_t(&t);
-	}
-	else {
-		atm_set_from_time_t(adt, &t);
-	}
+	atm_set_from_time_t(at, &t);
 }
 
-// Set or create an atm instance initialized with the specified time.
-void atm_set_from_time_t(atm *adt, time_t *t) {
-	if (adt == NULL) {
-		adt = atm_create_from_time_t(t);
-	}
-	else {
-		if (t != NULL) {
-			adt->time = *t;
-			if (adt->original == 0) {
-				adt->original = adt->time;
-			}
-			gmtime_r(&(adt->time), adt->gm);
-			localtime_r(&(adt->time), adt->loc);
+/*
+ * Set or create an atm instance initialized with the specified time.
+ */
+void atm_set_from_time_t(atm *at, time_t *t) {
+	if (t != NULL) {
+		if (at == NULL) {
+			at = atm_allocate();
 		}
-	}
-}
-
-// Set or create an atm instance initialized with the specified gm time.
-void atm_set_from_gmtime(atm *adt, struct tm *tm) {
-	if (adt == NULL) {
-		adt = atm_create_from_gmtime(tm);
-	}
-	else {
-		if (tm != NULL) {
-			memcpy(adt->gm, tm, sizeof (struct tm));
-			adt->time = timegm(adt->gm);
-			if (adt->original == 0) {
-				adt->original = adt->time;
-			}
-			localtime_r(&(adt->time), adt->loc);
+		at->time = *t;
+		if (at->original == 0) {
+			at->original = at->time;
 		}
+		gmtime_r(&(at->time), at->gm);
+		localtime_r(&(at->time), at->loc);
 	}
 }
 
-// Set or create an atm instance initialized with the specified local time.
-void atm_set_from_localtime(atm *adt, struct tm *tm) {
-	if (adt == NULL) {
-		adt = atm_create_from_loctime(tm);
-	}
-	else {
-		if (tm != NULL) {
-			memcpy(adt->loc, tm, sizeof (struct tm));
-			adt->time = timelocal(adt->loc);
-			if (adt->original == 0) {
-				adt->original = adt->time;
-			}
-			gmtime_r(&(adt->time), adt->gm);
+/*
+ * Set or create an atm instance initialized with the specified gm time.
+ */
+void atm_set_from_gmtime(atm *at, struct tm *tm) {
+	if (tm != NULL) {
+		if (at == NULL) {
+			at = atm_allocate();
 		}
+		memcpy(at->gm, tm, sizeof (struct tm));
+		at->time = timegm(at->gm);
+		if (at->original == 0) {
+			at->original = at->time;
+		}
+		localtime_r(&(at->time), at->loc);
 	}
 }
 
-// Compare two atm instances.
+/*
+ * Set or create an atm instance initialized with the specified local time.
+ */
+void atm_set_from_localtime(atm *at, struct tm *tm) {
+	if (tm != NULL) {
+		if (at == NULL) {
+			at = atm_allocate();
+		}
+		memcpy(at->loc, tm, sizeof (struct tm));
+		at->time = timelocal(at->loc);
+		if (at->original == 0) {
+			at->original = at->time;
+		}
+		gmtime_r(&(at->time), at->gm);
+	}
+}
+
+/*
+ * Compare two atm instances.
+ *
+ * Return a number less than, equal to, or greater than zero if
+ * left is less than, equal to, or greater than right, respectively.
+ */
 int atm_compare(atm *left, atm *right, atm_comparison_mode cmp) {
 	int result = 0;
 	if (left != NULL && right != NULL) {
@@ -265,42 +202,62 @@ int atm_compare(atm *left, atm *right, atm_comparison_mode cmp) {
 }
 
 /*
- * Determine if left is equal right.
- * Return 1 is true, 0 if false;
+ * Determine if left is a time that is equal to right.
+ *
+ * Return 1 if true, 0 if false;
  */
 int atm_is_equal(atm *left, atm *right, atm_comparison_mode cmp) {
 	return atm_compare(left, right, cmp) == 0 ? 1 : 0;
 }
 
 /*
- * Determine if left is before right.
- * Return 1 is true, 0 if false;
+ * Determine if left is a time that is before (less than) right.
+ *
+ * Return 1 if true, 0 if false;
  */
 int atm_is_before(atm *left, atm *right, atm_comparison_mode cmp) {
 	return atm_compare(left, right, cmp) < 0 ? 1 : 0;
 }
 
 /*
- * Determine if left is after right.
- * Return 1 is true, 0 if false;
+ * Determine if left is a time that is after (greater than) right.
+ *
+ * Return 1 if true, 0 if false;
  */
 int atm_is_after(atm *left, atm *right, atm_comparison_mode cmp) {
 	return atm_compare(left, right, cmp) > 0 ? 1 : 0;
 }
 
+// ---------------------------------------------------------------------------
+// struct tm elements and usages:
+//
+// ---- USED IN TIMEONLY AND DATEANDTIME COMPARISONS
 //  int tm_sec;			/* Seconds.	[0-60] (1 leap second) */
 //  int tm_min;			/* Minutes.	[0-59] */
-//  int tm_hour;			/* Hours.	[0-23] */
-//  int tm_mday;			/* Day.		[1-31] */
+//  int tm_hour;		/* Hours.	[0-23] */
+//
+// ---- USED IN DATEONLY AND DATEANDTIME COMPARISONS
+//  int tm_mday;		/* Day.		[1-31] */
 //  int tm_mon;			/* Month.	[0-11] */
-//  int tm_year;			/* Year	- 1900.  */
-//  int tm_wday;			/* Day of week.	[0-6] */
-//  int tm_yday;			/* Days in year.[0-365]	*/
-//  int tm_isdst;			/* DST.		[-1/0/1]*/
-//  long int tm_gmtoff;		/* Seconds east of UTC.  */
-//  const char *tm_zone;		/* Timezone abbreviation.  */
+//  int tm_year;		/* Year	- 1900. */
+//
+// ---- NOT USED IN COMPARISONS
+//  int tm_wday;				/* Day of week.	 [0-6] */
+//  int tm_yday;				/* Days in year. [0-365]	*/
+//  int tm_isdst;				/* DST. [-1/0/1] */
+//  long int tm_gmtoff;		/* Seconds east of UTC. */
+//  const char *tm_zone;		/* Timezone abbreviation. */
+// ---------------------------------------------------------------------------
 
-// Compare the date components of two atm instances.
+/*
+ * Compare the date components of two atm instances.
+ *
+ * Called when comparing two atm instances with
+ * the atm_comparison_mode of DATEONLY or DATEANDTIME.
+ *
+ * Return a number less than, equal to, or greater than zero if
+ * left is less than, equal to, or greater than right, respectively.
+ */
 int atm_compare_date(atm *left, atm *right) {
 	int result = 0;
 	if (left != right) {
@@ -319,7 +276,15 @@ int atm_compare_date(atm *left, atm *right) {
 	return 0;
 }
 
-// Compare the time components of two atm instances.
+/*
+ * Compare the time components of two atm instances.
+ *
+ * Called when comparing two atm instances with
+ * the atm_comparison_mode of TIMEONLY or DATEANDTIME.
+ *
+ * Return a number less than, equal to, or greater than zero if
+ * left is less than, equal to, or greater than right, respectively.
+ */
 int atm_compare_time(atm *left, atm *right) {
 	int result = 0;
 	if (left != right) {
@@ -338,7 +303,42 @@ int atm_compare_time(atm *left, atm *right) {
 	return 0;
 }
 
-// Compare two integers.
-int compare_int(int left, int right) {
-	return left - right;
+/*
+ * Determine the earliest of two atm instances.
+ *
+ * Return the earliest of the two atm instances.
+ * If the two are equal, return the second parameter.
+ */
+atm *atm_earliest(atm *at1, atm *at2, atm_comparison_mode cmp) {
+	atm *at = NULL;
+	if (at1 != NULL && at2 != NULL) {
+		if(atm_is_before(at1, at2, cmp)) {
+			at = at1;
+		}
+		else {
+			at = at2;
+		}
+	}
+
+	return at;
+}
+
+/*
+ * Determine the latest of two atm instances.
+ *
+ * Return the latest of the two atm instances.
+ * If the two are equal, return the second parameter.
+ */
+atm *atm_latest(atm *at1, atm *at2, atm_comparison_mode cmp) {
+	atm *at = NULL;
+	if (at1 != NULL && at2 != NULL) {
+		if(atm_is_after(at1, at2, cmp)) {
+			at = at1;
+		}
+		else {
+			at = at2;
+		}
+	}
+
+	return at;
 }
