@@ -121,11 +121,70 @@ void test_create_test_times() {
 	free_test_times();
 }
 
+void test_in_range() {
+	create_test_times();
+	adatetime_range *range = adatetime_range_create(adtmonless, adthourless);
+	aut_assert("day less is in range month less and hour less", adatetime_is_in_range(adtdayless, range, DATEANDTIME));
+	aut_assert("year less is not in range month less and hour less", !adatetime_is_in_range(adtyearless, range, DATEANDTIME));
+	aut_assert("min less is not in range month less and hour less", !adatetime_is_in_range(adtminless, range, DATEANDTIME));
+	adatetime_range_free(range);
+	free_test_times();
+}
+
+void test_is_equal() {
+	create_test_times();
+	adatetime_range *range1 = adatetime_range_create(adtmonless, adthourless);
+	adatetime_range *range2 = adatetime_range_create(adtmonless, adthourless);
+	adatetime_range *range3 = adatetime_range_create(adtyearless, adthourless);
+	adatetime_range *range4 = adatetime_range_create(adtmonless, adtminless);
+	adatetime_range *range5 = adatetime_range_create(adthourless, adtminless);
+	adatetime_range *range6 = adatetime_range_create(adtnow, adtminless);
+	adatetime_range *range7 = adatetime_range_create(adtmonless, adtdayless);
+	adatetime_range *range8 = adatetime_range_create(adtnow, adtmonless);
+	aut_assert("self is equal self", adatetime_range_is_equal(range1, range1, DATEANDTIME));
+	aut_assert("should be equal", adatetime_range_is_equal(range1, range2, DATEANDTIME));
+	aut_assert("should be equal date only", adatetime_range_is_equal(range5, range6, DATEONLY));
+	aut_assert("should be equal time only", adatetime_range_is_equal(range7, range8, TIMEONLY));
+	aut_assert("starts earlier, should not be equal", !adatetime_range_is_equal(range1, range3, DATEANDTIME));
+	aut_assert("ends later, should not be equal", !adatetime_range_is_equal(range1, range4, DATEANDTIME));
+	adatetime_range_free(range1);
+	adatetime_range_free(range2);
+	adatetime_range_free(range3);
+	adatetime_range_free(range4);
+	adatetime_range_free(range5);
+	adatetime_range_free(range6);
+	adatetime_range_free(range7);
+	adatetime_range_free(range8);
+	free_test_times();
+}
+
+void test_is_before() {
+	create_test_times();
+	adatetime_range *range = adatetime_range_create(adtmonless, adthourless);
+	aut_assert("day less is not before month less and hour less", !adatetime_is_before_range(adtdayless, range, DATEANDTIME));
+	aut_assert("year less is before range month less and hour less", adatetime_is_before_range(adtyearless, range, DATEANDTIME));
+	adatetime_range_free(range);
+	free_test_times();
+}
+
+void test_is_after() {
+	create_test_times();
+	adatetime_range *range = adatetime_range_create(adtmonless, adthourless);
+	aut_assert("day less is not after month less and hour less", !adatetime_is_after_range(adtdayless, range, DATEANDTIME));
+	aut_assert("minute less is after range month less and hour less", adatetime_is_after_range(adtminless, range, DATEANDTIME));
+	adatetime_range_free(range);
+	free_test_times();
+}
+
 // ----------
 
 int main(int argc, char *argv[]) {
 	aut_initialize_suite();
 	aut_run_test(test_create_test_times);
+	aut_run_test(test_in_range);
+	aut_run_test(test_is_equal);
+	aut_run_test(test_is_before);
+	aut_run_test(test_is_after);
 	aut_report();
 	aut_terminate_suite();
 	aut_return();

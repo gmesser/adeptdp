@@ -111,16 +111,17 @@ void print_adatetime_gm(adatetime *adt) {
 void test_adatetime_create_now() {
 	adatetime *adt1 = adatetime_create_now();
 	aut_assert("test adatetime_create_now", adt1 != NULL);
-	printf("\nCreated from now...\n");
-	print_adatetime(adt1);
+//	printf("\nCreated from now...\n");
+//	print_adatetime(adt1);
+	adt1 = adatetime_free(adt1);
 }
 
 void test_adatetime_create_from_time_t() {
 	time_t t1 = time(0);
 	adatetime *adt1 = adatetime_create_from_time_t(&t1);
 	aut_assert("test_adatetime_create_from_time_t", adt1 != NULL);
-	printf("\nCreated from time_t...\n");
-	print_adatetime(adt1);
+//	printf("\nCreated from time_t...\n");
+//	print_adatetime(adt1);
 	adt1 = adatetime_free(adt1);
 }
 
@@ -129,8 +130,8 @@ void test_adatetime_create_from_gmtime() {
 	struct tm *tm1 = gmtime(&t1);
 	adatetime *adt1 = adatetime_create_from_gmtime(tm1);
 	aut_assert("test_adatetime_create_from_gmtime", adt1 != NULL);
-	printf("\nCreated from gmtime...\n");
-	print_adatetime(adt1);
+//	printf("\nCreated from gmtime...\n");
+//	print_adatetime(adt1);
 	adt1 = adatetime_free(adt1);
 }
 
@@ -139,8 +140,8 @@ void test_adatetime_create_from_loctime() {
 	struct tm *tm1 = localtime(&t1);
 	adatetime *adt1 = adatetime_create_from_loctime(tm1);
 	aut_assert("test_adatetime_create_from_loctime", adt1 != NULL);
-	printf("\nCreated from localtime...\n");
-	print_adatetime(adt1);
+//	printf("\nCreated from localtime...\n");
+//	print_adatetime(adt1);
 	adt1 = adatetime_free(adt1);
 }
 
@@ -189,13 +190,13 @@ void test_adatetime_compare_dateandtime() {
 
 void test_adatetime_compare_dateonly() {
 	create_test_times();
-	printf("\ntest_adatetime_compare_dateonly()\n");
-	printf("now... ");
-	print_adatetime(adtnow);
-	printf("hourless... ");
-	print_adatetime(adthourless);
-	printf("dayless... ");
-	print_adatetime(adtdayless);
+//	printf("\ntest_adatetime_compare_dateonly()\n");
+//	printf("now... ");
+//	print_adatetime(adtnow);
+//	printf("hourless... ");
+//	print_adatetime(adthourless);
+//	printf("dayless... ");
+//	print_adatetime(adtdayless);
 	aut_assert("year less < mon less", adatetime_compare(adtyearless, adtmonless, DATEONLY) < 0);
 	aut_assert("mon less < day less", adatetime_compare(adtmonless, adtdayless, DATEONLY) < 0);
 	aut_assert("day less < hour less", adatetime_compare(adtdayless, adthourless, DATEONLY) < 0);
@@ -206,13 +207,13 @@ void test_adatetime_compare_dateonly() {
 
 void test_adatetime_compare_timeonly() {
 	create_test_times();
-	printf("\ntest_adatetime_compare_timeonly()\n");
-	printf("now... ");
-	print_adatetime(adtnow);
-	printf("hourless... ");
-	print_adatetime(adthourless);
-	printf("dayless... ");
-	print_adatetime(adtdayless);
+//	printf("\ntest_adatetime_compare_timeonly()\n");
+//	printf("now... ");
+//	print_adatetime(adtnow);
+//	printf("hourless... ");
+//	print_adatetime(adthourless);
+//	printf("dayless... ");
+//	print_adatetime(adtdayless);
 	aut_assert("year less == mon less", adatetime_compare(adtyearless, adtmonless, TIMEONLY) == 0);
 	aut_assert("mon less == day less", adatetime_compare(adtmonless, adtdayless, TIMEONLY) == 0);
 	aut_assert("day less > hour less", adatetime_compare(adtdayless, adthourless, TIMEONLY) > 0);
