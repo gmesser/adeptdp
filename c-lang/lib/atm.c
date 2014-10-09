@@ -1,13 +1,13 @@
-// adatetime.c - Adept Date and Time
+// atm.c - Adept Time
 
 /*
- * Date and Time functions.
+ * Date and Time functions using the tm structure and time_t.
  */
 
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "adatetime.h"
+#include "atm.h"
 
 // Return the current system time.
 time_t now();
@@ -76,48 +76,48 @@ int compare_int(int left, int right);
  *		If the time is unavailable, then -1 is returned.
  */
 
-// Create an adatetime instance initialized with the current time.
-adatetime *adatetime_create_now() {
+// Create an atm instance initialized with the current time.
+atm *atm_create_now() {
 	time_t t = time(0);
-	adatetime *adt = adatetime_create_from_time_t(&t);
+	atm *adt = atm_create_from_time_t(&t);
 	return adt;
 }
 
-// Create an adatetime instance initialized with the specified time.
-adatetime *adatetime_create_from_time_t(time_t *t) {
-	adatetime *adt = NULL;
+// Create an atm instance initialized with the specified time.
+atm *atm_create_from_time_t(time_t *t) {
+	atm *adt = NULL;
 	if (t != NULL) {
-		adt = adatetime_allocate();
-		adatetime_set_from_time_t(adt, t);
+		adt = atm_allocate();
+		atm_set_from_time_t(adt, t);
 	}
 	return adt;
 }
 
-// Create an adatetime instance initialized with the specified gm time.
-adatetime *adatetime_create_from_gmtime(struct tm *gmtm) {
-	adatetime *adt = NULL;
+// Create an atm instance initialized with the specified gm time.
+atm *atm_create_from_gmtime(struct tm *gmtm) {
+	atm *adt = NULL;
 	if (gmtm != NULL) {
-		adt = adatetime_allocate();
-		adatetime_set_from_gmtime(adt, gmtm);
+		adt = atm_allocate();
+		atm_set_from_gmtime(adt, gmtm);
 	}
 	return adt;
 }
 
-// Create an adatetime instance initialized with the specified local time.
-adatetime *adatetime_create_from_loctime(struct tm *loctm) {
-	adatetime *adt = NULL;
+// Create an atm instance initialized with the specified local time.
+atm *atm_create_from_loctime(struct tm *loctm) {
+	atm *adt = NULL;
 	if (loctm != NULL) {
-		adt = adatetime_allocate();
-		adatetime_set_from_localtime(adt, loctm);
+		adt = atm_allocate();
+		atm_set_from_localtime(adt, loctm);
 	}
 	return adt;
 }
 
-// Create an adatetime instance that is copied from the specified adatetime instance.
-adatetime *adatetime_copy(adatetime *dst, adatetime *src) {
+// Create an atm instance that is copied from the specified atm instance.
+atm *atm_copy(atm *dst, atm *src) {
 	if (src != NULL) {
 		if(dst == NULL) {
-			dst = adatetime_allocate();
+			dst = atm_allocate();
 		}
 		dst->time = src->time;
 		dst->original = src->original;
@@ -127,11 +127,11 @@ adatetime *adatetime_copy(adatetime *dst, adatetime *src) {
 	return dst;
 }
 
-// Determine which of the two adatetime instances is the earliest time.
-adatetime *adatetime_earliest(adatetime *adt1, adatetime *adt2, adatetime_comparison_mode cmp) {
-	adatetime *adt = NULL;
+// Determine which of the two atm instances is the earliest time.
+atm *atm_earliest(atm *adt1, atm *adt2, atm_comparison_mode cmp) {
+	atm *adt = NULL;
 	if (adt1 != NULL && adt2 != NULL) {
-		if(adatetime_is_before(adt1, adt2, cmp)) {
+		if(atm_is_before(adt1, adt2, cmp)) {
 			adt = adt1;
 		}
 		else {
@@ -142,11 +142,11 @@ adatetime *adatetime_earliest(adatetime *adt1, adatetime *adt2, adatetime_compar
 	return adt;
 }
 
-// Determine which of the two adatetime instances is the latest time.
-adatetime *adatetime_latest(adatetime *adt1, adatetime *adt2, adatetime_comparison_mode cmp) {
-	adatetime *adt = NULL;
+// Determine which of the two atm instances is the latest time.
+atm *atm_latest(atm *adt1, atm *adt2, atm_comparison_mode cmp) {
+	atm *adt = NULL;
 	if (adt1 != NULL && adt2 != NULL) {
-		if(adatetime_is_after(adt1, adt2, cmp)) {
+		if(atm_is_after(adt1, adt2, cmp)) {
 			adt = adt1;
 		}
 		else {
@@ -157,16 +157,16 @@ adatetime *adatetime_latest(adatetime *adt1, adatetime *adt2, adatetime_comparis
 	return adt;
 }
 
-// Allocate the memory for an adatetime structure.
-adatetime *adatetime_allocate() {
-	adatetime *adt = calloc(1, sizeof(adatetime));
+// Allocate the memory for an atm structure.
+atm *atm_allocate() {
+	atm *adt = calloc(1, sizeof(atm));
 	adt->gm = calloc(1, sizeof(struct tm));
 	adt->loc = calloc(1, sizeof(struct tm));
 	return adt;
 }
 
-// Free the memory that was allocated for an adatetime structure.
-adatetime *adatetime_free(adatetime *adt) {
+// Free the memory that was allocated for an atm structure.
+atm *atm_free(atm *adt) {
 	if(adt != NULL) {
 		if(adt->gm != NULL) {
 			free(adt->gm);
@@ -179,21 +179,21 @@ adatetime *adatetime_free(adatetime *adt) {
 	return NULL;
 }
 
-// Set or create an adatetime instance initialized with the current time.
-void adatetime_set_now(adatetime *adt) {
+// Set or create an atm instance initialized with the current time.
+void atm_set_now(atm *adt) {
 	time_t t = time(0);
 	if(adt == NULL) {
-		adatetime_create_from_time_t(&t);
+		atm_create_from_time_t(&t);
 	}
 	else {
-		adatetime_set_from_time_t(adt, &t);
+		atm_set_from_time_t(adt, &t);
 	}
 }
 
-// Set or create an adatetime instance initialized with the specified time.
-void adatetime_set_from_time_t(adatetime *adt, time_t *t) {
+// Set or create an atm instance initialized with the specified time.
+void atm_set_from_time_t(atm *adt, time_t *t) {
 	if (adt == NULL) {
-		adt = adatetime_create_from_time_t(t);
+		adt = atm_create_from_time_t(t);
 	}
 	else {
 		if (t != NULL) {
@@ -207,10 +207,10 @@ void adatetime_set_from_time_t(adatetime *adt, time_t *t) {
 	}
 }
 
-// Set or create an adatetime instance initialized with the specified gm time.
-void adatetime_set_from_gmtime(adatetime *adt, struct tm *tm) {
+// Set or create an atm instance initialized with the specified gm time.
+void atm_set_from_gmtime(atm *adt, struct tm *tm) {
 	if (adt == NULL) {
-		adt = adatetime_create_from_gmtime(tm);
+		adt = atm_create_from_gmtime(tm);
 	}
 	else {
 		if (tm != NULL) {
@@ -224,10 +224,10 @@ void adatetime_set_from_gmtime(adatetime *adt, struct tm *tm) {
 	}
 }
 
-// Set or create an adatetime instance initialized with the specified local time.
-void adatetime_set_from_localtime(adatetime *adt, struct tm *tm) {
+// Set or create an atm instance initialized with the specified local time.
+void atm_set_from_localtime(atm *adt, struct tm *tm) {
 	if (adt == NULL) {
-		adt = adatetime_create_from_loctime(tm);
+		adt = atm_create_from_loctime(tm);
 	}
 	else {
 		if (tm != NULL) {
@@ -241,21 +241,21 @@ void adatetime_set_from_localtime(adatetime *adt, struct tm *tm) {
 	}
 }
 
-// Compare two adatetime instances.
-int adatetime_compare(adatetime *left, adatetime *right, adatetime_comparison_mode cmp) {
+// Compare two atm instances.
+int atm_compare(atm *left, atm *right, atm_comparison_mode cmp) {
 	int result = 0;
 	if (left != NULL && right != NULL) {
 		if (left != right) {
 			if (cmp == DATEONLY) {
-				result = adatetime_compare_date(left, right);
+				result = atm_compare_date(left, right);
 			}
 			else if (cmp == TIMEONLY) {
-				result = adatetime_compare_time(left, right);
+				result = atm_compare_time(left, right);
 			}
 			else {
-				result = adatetime_compare_date(left, right);
+				result = atm_compare_date(left, right);
 				if (result == 0) {
-					result = adatetime_compare_time(left, right);
+					result = atm_compare_time(left, right);
 				}
 			}
 		}
@@ -268,24 +268,24 @@ int adatetime_compare(adatetime *left, adatetime *right, adatetime_comparison_mo
  * Determine if left is equal right.
  * Return 1 is true, 0 if false;
  */
-int adatetime_is_equal(adatetime *left, adatetime *right, adatetime_comparison_mode cmp) {
-	return adatetime_compare(left, right, cmp) == 0 ? 1 : 0;
+int atm_is_equal(atm *left, atm *right, atm_comparison_mode cmp) {
+	return atm_compare(left, right, cmp) == 0 ? 1 : 0;
 }
 
 /*
  * Determine if left is before right.
  * Return 1 is true, 0 if false;
  */
-int adatetime_is_before(adatetime *left, adatetime *right, adatetime_comparison_mode cmp) {
-	return adatetime_compare(left, right, cmp) < 0 ? 1 : 0;
+int atm_is_before(atm *left, atm *right, atm_comparison_mode cmp) {
+	return atm_compare(left, right, cmp) < 0 ? 1 : 0;
 }
 
 /*
  * Determine if left is after right.
  * Return 1 is true, 0 if false;
  */
-int adatetime_is_after(adatetime *left, adatetime *right, adatetime_comparison_mode cmp) {
-	return adatetime_compare(left, right, cmp) > 0 ? 1 : 0;
+int atm_is_after(atm *left, atm *right, atm_comparison_mode cmp) {
+	return atm_compare(left, right, cmp) > 0 ? 1 : 0;
 }
 
 //  int tm_sec;			/* Seconds.	[0-60] (1 leap second) */
@@ -300,8 +300,8 @@ int adatetime_is_after(adatetime *left, adatetime *right, adatetime_comparison_m
 //  long int tm_gmtoff;		/* Seconds east of UTC.  */
 //  const char *tm_zone;		/* Timezone abbreviation.  */
 
-// Compare the date components of two adatetime instances.
-int adatetime_compare_date(adatetime *left, adatetime *right) {
+// Compare the date components of two atm instances.
+int atm_compare_date(atm *left, atm *right) {
 	int result = 0;
 	if (left != right) {
 		if (left != NULL && right != NULL) {
@@ -319,8 +319,8 @@ int adatetime_compare_date(adatetime *left, adatetime *right) {
 	return 0;
 }
 
-// Compare the time components of two adatetime instances.
-int adatetime_compare_time(adatetime *left, adatetime *right) {
+// Compare the time components of two atm instances.
+int atm_compare_time(atm *left, atm *right) {
 	int result = 0;
 	if (left != right) {
 		if (left != NULL && right != NULL) {
