@@ -123,6 +123,19 @@ void atm_set_now(atm *at) {
 }
 
 /*
+ * Set an atm instance to its original time.
+ * The original time is the time that was set when the instance was allocated 
+ * and initialized.  It is retained over the lifetime of the instance, so the 
+ * instance can be returned to its originally set time.
+ */
+void atm_set_original(atm *at) {
+	if(at != NULL) {
+		time_t t = at->original;
+		atm_set_from_time_t(at, &t);
+	}
+}
+
+/*
  * Set or create an atm instance initialized with the specified time.
  */
 void atm_set_from_time_t(atm *at, time_t *t) {

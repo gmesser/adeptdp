@@ -108,6 +108,20 @@ void print_atm_gm(atm *at) {
 
 // ----------
 
+void test_atm_set_original() {
+	atm *at = atm_create_now();
+	aut_assert("test atm_set_original 1", at != NULL && at->original == at->time);
+	time_t orit = at->original;
+	time_t newt = at->time + 600;
+	atm_set_from_time_t(at, &newt);
+	aut_assert("test atm_set_original 2", at != NULL && at->original == orit && at->time == newt);
+	atm_set_original(at);
+	aut_assert("test atm_set_original 3", at != NULL && at->original == at->time && at->time == orit);
+//	printf("\nCreated from now...\n");
+//	print_atm(at);
+	at = atm_free(at);
+}
+
 void test_atm_create_now() {
 	atm *at1 = atm_create_now();
 	aut_assert("test atm_create_now", at1 != NULL);
@@ -226,6 +240,7 @@ void test_atm_compare_timeonly() {
 
 int main(int argc, char *argv[]) {
 	aut_initialize_suite();
+	aut_run_test(test_atm_set_original);
 	aut_run_test(test_atm_create_now);
 	aut_run_test(test_atm_create_from_time_t);
 	aut_run_test(test_atm_create_from_gmtime);

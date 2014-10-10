@@ -42,10 +42,10 @@ extern "C" {
 typedef enum { DATEONLY, TIMEONLY, DATEANDTIME } atm_comparison_mode;
 
 typedef struct {
-	time_t original;	// The original time, before the comparison mode was applied.
-	time_t time;		// The time, filtered.
-	struct tm *gm;		// The Greenwich mean time, filtered.
-	struct tm *loc;	// The local time, filtered.
+	time_t original;	// The original calendar time that was set.
+	time_t time;		// The calendar time - in seconds.
+	struct tm *gm;		// The Greenwich mean time (UTC).
+	struct tm *loc;		// The local time.
 } atm;
 
 atm *atm_allocate();
@@ -58,6 +58,7 @@ atm *atm_create_from_loctime(struct tm *tm);
 atm *atm_copy(atm *dst, atm *src);
 
 void atm_set_now(atm *at);
+void atm_set_original(atm *at);
 void atm_set_from_time_t(atm *at, time_t *t);
 void atm_set_from_gmtime(atm *at, struct tm *tm);
 void atm_set_from_localtime(atm *at, struct tm *tm);
