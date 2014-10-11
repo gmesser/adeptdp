@@ -15,8 +15,8 @@ extern "C" {
 #endif
 
 typedef struct atm_range {
-	atm *begin;	// The beginning of the range.
-	atm *end;	// The end of the range.
+	atm *begin; // The beginning of the range.
+	atm *end;   // The end of the range.
 } atm_range;
 
 atm_range *atm_range_allocate();
