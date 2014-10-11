@@ -24,8 +24,10 @@ Library Modules
 		creation and would still require a full comparison to verify that the
 		strings are a real match when the hashes match.
 		
-		The C string member is readily accessible for use by all the standard C
-		library methods.
+		The astr members are readily accessible for use by all the standard C
+		library functions in addition to the functions provided by the module.
+		Modifying the internal members, though, could put the instance in an
+		inconsistent state.
 
 		astr.h - Adept string header
 		astr.c - Adept string creations and modification functions.
@@ -44,6 +46,11 @@ Library Modules
 		names, and collects the various FILE settings like open mode, buffer 
 		size, and more in one place.
 		
+		The afile members are readily accessible for use by all the standard C
+		library functions in addition to the functions provided by the module.
+		Modifying the internal members, though, could put the instance in an
+		inconsistent state.
+
 		afile.h - Adept file header.
 		afile.c - Adept file creation, management, and processing functions.
 
@@ -58,9 +65,67 @@ Library Modules
 		system, those clock ticks are not included in the number of clock ticks
 		returned to the function by the clock() function.
 		
+		The aclock members are readily accessible for use by all the standard C
+		library functions in addition to the functions provided by the module.
+		Modifying the internal members, though, could put the instance in an
+		inconsistent state.
+
 		aclock.h - Adept clock header.
 		aclock.c - Adept clock creation and management functions.
 	
+	------------------------------
+	atm
+
+		An atm instance is a date and time module that holds date and time
+		elements and a comparison mode which will determine how the instances
+		will compare to each other.
+
+		An atm holds a time_t, and two struct tm elements with the gmtime and the
+		localtime.  These elements are different forms of the same time.
+
+		An atm instance provides comparison functions using one of three
+		comparison modes:
+
+			DATEANDTIME - compare year, month, day, hour, minute, and seconds.
+				Answers "Did two things happen at the same time on the same day?"
+
+			DATEONLY - compare year, month, and day, ignoring the time.
+				Determine if the time is at any time on the same day.
+				Answers "Did two things happen on the same day?"
+
+			TIMEONLY - compare hour, minute, and second, ignoring the date.
+				Determine if the time is the same as a time on a different day.
+				Answers "Did two things happen at the same time of day?"
+
+		The atm members are readily accessible for use by all the standard C
+		library functions in addition to the functions provided by the module.
+		Modifying the internal members, though, could put the instance in an
+		inconsistent state.
+
+		atm.h - Adept time header
+		atm.c - Adept time creation and management functions.
+
+
+	------------------------------
+	atm_range
+
+		An atm_range instance holds a pair of atm instances representing the
+		start and end time of a range.
+
+		An atm instance provides comparison functions using the same three
+		comparison modes provided by the atm instances.
+
+		The comparison functions
+		determine if one atm instance is within the range or not.
+
+		The atm_range members are readily accessible for use by all the standard C
+		library functions in addition to the functions provided by the module.
+		Modifying the internal members, though, could put the instance in an
+		inconsistent state.
+
+		atm_range.h - Adept time range header
+		atm_range.c - Adept time range creation and management functions.
+
 Example Application
 
 	acatfile - A simple implementation of cat.
@@ -92,6 +157,16 @@ Unit Test Programs
 
 		test_aclock.c
 
+	------------------------------
+	atm
+
+		test_atm.c
+
+	------------------------------
+	atm_range
+
+		test_atm_range.c
+
 Method Documentation
 
 	------------------------------
@@ -102,7 +177,7 @@ Method Documentation
 
 		Create an empty new astr instance.
 
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -111,7 +186,7 @@ Method Documentation
 		Create a new astr instance that is copied from an existing astr instance.
 
 		Parameter: The source astr instance
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -120,7 +195,7 @@ Method Documentation
 		Create a new astr instance with contents from a string.
 		
 		Parameter: The source null-terminated string
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -130,7 +205,7 @@ Method Documentation
 
 		Parameter: The source buffer
 		Parameter: The length of the source buffer
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
 
  
 		-----
@@ -140,7 +215,7 @@ Method Documentation
 
 		Parameter: The printf format string
 		Parameter: The argument list for printf
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
 
 
 		-----
@@ -159,7 +234,7 @@ Method Documentation
 
 		Parameter: The astr instance to be tokenized
 		Parameter: The string containing the delimiters
-		Returns:   Pointer to the new astr instance
+		Return:    Pointer to the new astr instance
 
 
 		-----
@@ -174,7 +249,7 @@ Method Documentation
 
 		Parameter: The astr instance to be tokenized
 		Parameter: The string containing the delimiters
-		Returns:   Pointer to an array of astr pointers.  The last array element
+		Return:    Pointer to an array of astr pointers.  The last array element
 				will be a NULL pointer for a terminator.
 
 
@@ -185,7 +260,7 @@ Method Documentation
 
 		Parameter: The astr instance to be reinitialized
 		Parameter: The source null-terminated string
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -198,7 +273,7 @@ Method Documentation
 		Parameter: The astr instance to be reinitialized
 		Parameter: The source buffer
 		Parameter: The length of the source buffer
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -208,7 +283,7 @@ Method Documentation
 
 		Parameter: The astr instance to be appended to
 		Parameter: The source null-terminated string to be appended
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -221,7 +296,7 @@ Method Documentation
 		Parameter: The astr instance to be reinitialized
 		Parameter: The source buffer
 		Parameter: The length of the source buffer
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -231,7 +306,7 @@ Method Documentation
 
 		Parameter: The astr instance
 		Parameter: The length of the string member
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -241,7 +316,7 @@ Method Documentation
 
 		Parameter: The astr instance
 		Parameter: The new length of the string member
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -251,7 +326,7 @@ Method Documentation
 		Keep the storage allocation, set the other members to zero.
 
 		Parameter: The astr instance
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -261,7 +336,7 @@ Method Documentation
 		Free the storage allocation, set all members to zero.
 
 		Parameter: The astr instance
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -272,7 +347,7 @@ Method Documentation
 		the astr instance itself.
 
 		Parameter: The astr instance
-		Returns:   NULL pointer
+		Return:    NULL pointer
  
 
 	------------------------------
@@ -290,7 +365,7 @@ Method Documentation
 
 		Parameter: The first astr instance
 		Parameter: The second astr instance
-		Returns:   1 if equal, 0 if not
+		Return:    1 if equal, 0 if not
  
 
 		-----
@@ -301,7 +376,7 @@ Method Documentation
 		Parameter: The first astr instance
 		Parameter: The second astr instance
 		Parameter: The number of prefix characters to compare
-		Returns:   1 if equal, 0 if not
+		Return:    1 if equal, 0 if not
  
 
 		-----
@@ -313,7 +388,7 @@ Method Documentation
 
 		Parameter: The first astr instance
 		Parameter: The second astr instance
-		Returns:   1 if as1<as2, 0 if not
+		Return:    1 if as1<as2, 0 if not
  
 
 		-----
@@ -325,7 +400,7 @@ Method Documentation
 
 		Parameter: The first astr instance
 		Parameter: The second astr instance
-		Returns:   1 if as1>as2, 0 if not
+		Return:    1 if as1>as2, 0 if not
  
 
 		-----
@@ -341,7 +416,7 @@ Method Documentation
 
 		Parameter: The first astr instance
 		Parameter: The second astr instance
-		Returns:   <0 if as1<as2, 0 if as1==as2, >0 if as1>as2
+		Return:    <0 if as1<as2, 0 if as1==as2, >0 if as1>as2
 		See also:  strcmp()
  
 
@@ -359,7 +434,7 @@ Method Documentation
 		Parameter: The first astr instance
 		Parameter: The second astr instance
 		Parameter: The number of prefix characters to compare
-		Returns:   <0 if as1<as2, 0 if as1==as2, >0 if as1>as2
+		Return:    <0 if as1<as2, 0 if as1==as2, >0 if as1>as2
 		See also:  strncmp()
  
 
@@ -382,7 +457,7 @@ Method Documentation
 		Errno:     EINVAL if the string is an invalid number
 		           EDOM if the string is NULL or empty
 		           0 if the string was successfully evaluated
-		Returns:   The evaluated long value of the string
+		Return:    The evaluated long value of the string
  
 
 		-----
@@ -394,7 +469,7 @@ Method Documentation
 		Errno:     EINVAL if the string is an invalid number
 		           EDOM if the string is NULL or empty
 		           0 if the string was successfully evaluated
-		Returns:   The evaluated double value of the string
+		Return:    The evaluated double value of the string
  
 
 	------------------------------
@@ -408,7 +483,7 @@ Method Documentation
 		Convert all of the characters in the astr string to upper case.
 
 		Parameter: The astr instance to be edited
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -417,7 +492,7 @@ Method Documentation
 		Convert all of the characters in the astr string to lower case.
 
 		Parameter: The astr instance to be edited
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -430,7 +505,7 @@ Method Documentation
 		satisfies the standard isalnum() test;
 
 		Parameter: The astr instance to be edited
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -439,7 +514,7 @@ Method Documentation
 		Trim the left (leading) spaces of the astr string.
 
 		Parameter: The astr instance to be edited
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -448,7 +523,7 @@ Method Documentation
 		Trim the right (trailing) spaces of the astr string.
 
 		Parameter: The astr instance to be edited
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -457,7 +532,7 @@ Method Documentation
 		Trim the left and right spaces of the astr string.
 
 		Parameter: The astr instance to be edited
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -466,7 +541,7 @@ Method Documentation
 		Replace multiple space characters in the astr string with one space character.
 
 		Parameter: The astr instance to be edited
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -475,7 +550,7 @@ Method Documentation
 		Trim and pack the spaces in the astr string.
 
 		Parameter: The astr instance to be edited
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -484,7 +559,7 @@ Method Documentation
 		Make sure the astr string is not empty (or NULL), use space for the single character.
 
 		Parameter: The astr instance to be edited
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 		-----
@@ -494,7 +569,7 @@ Method Documentation
 
 		Parameter: The astr instance to be edited
 		Parameter: The character to use as the sole character if necessary
-		Returns:   Pointer to the astr instance
+		Return:    Pointer to the astr instance
  
 
 	------------------------------
@@ -508,7 +583,7 @@ Method Documentation
 		Calculate the checksum for an astr instance.
 
 		Parameter: The astr instance
-		Returns:	  The checksum of the string in an astr instance.
+		Return:	  The checksum of the string in an astr instance.
  
 
 		-----
@@ -537,7 +612,7 @@ Method Documentation
 		This function dumps the structure and the string.
 
 		Parameter: The astr instance
-		Returns:	  The address of the null-terminated destination buffer.
+		Return:	  The address of the null-terminated destination buffer.
  
 
 		-----
@@ -546,7 +621,7 @@ Method Documentation
 		Dump the string in an astr instance in hex dump format.
 
 		Parameter: The astr instance
-		Returns:	  The address of the null-terminated destination buffer.
+		Return:	  The address of the null-terminated destination buffer.
  
 		// Calculate the size of the buffer required to hold the hex dump.
 		// Allocate the buffer to hold the hex dump.
@@ -558,7 +633,7 @@ Method Documentation
 		Dump an astr structure instance in hex dump format.
 
 		Parameter: The astr instance
-		Returns:	  The address of the null-terminated destination buffer.
+		Return:	  The address of the null-terminated destination buffer.
  
 		// Calculate the size of the buffer required to hold the hex dump.
 		// Allocate the buffer to hold the hex dump.
@@ -592,7 +667,7 @@ Method Documentation
 		Parameter: dstlen - length of the destination buffer
 		Parameter: src     - address of the buffer to be dumped
 		Parameter: srclen  - length of the buffer to be dumped
-		Returns:	  The address of the null-terminated destination buffer.
+		Return:	  The address of the null-terminated destination buffer.
  
 
 	------------------------------
@@ -619,7 +694,7 @@ Method Documentation
 		Parameter: The file open modes
 		Parameter: The file buffer size
 		Parameter: The file buffering mode
-		Returns:   Pointer to the afile instance
+		Return:    Pointer to the afile instance
  
 
 		-----
@@ -668,7 +743,7 @@ Method Documentation
 		Open the file.
 
 		Parameter: The afile instance
-		Returns:   0 = success, non-zero = errno value from the failed operation
+		Return:    0 = success, non-zero = errno value from the failed operation
  
 
 		-----
@@ -677,7 +752,7 @@ Method Documentation
 		Close the file.
 
 		Parameter: The afile instance
-		Returns:   0 = success, non-zero = errno value from the failed operation
+		Return:    0 = success, non-zero = errno value from the failed operation
  
 
 		-----
@@ -703,7 +778,7 @@ Method Documentation
 
 		Parameter: An open file
 		Parameter: A pointer to a function that will process one line of text
-		Returns:   The number of lines processed
+		Return:    The number of lines processed
  
 
 		-----
@@ -716,7 +791,7 @@ Method Documentation
 		Parameter: An open file
 		Parameter: A pointer to a function that will match one line of text
 		Parameter: A pointer to a function that will process one line of text
-		Returns:   The number of lines processed
+		Return:    The number of lines processed
  
 
 		-----
@@ -740,7 +815,7 @@ Method Documentation
 
 		Parameter: The start time
 		Parameter: The end time
-		Returns: The difference in seconds between the two times
+		Return: The difference in seconds between the two times
 
 
 		-----
@@ -753,7 +828,7 @@ Method Documentation
 		system, those clock ticks are not included in the number of clock ticks
 		returned to the function by the clock() function.
 
-		Returns: The current CPU clock (system-dependent, normally in milliseconds)
+		Return: The current CPU clock (system-dependent, normally in milliseconds)
 
 
 		-----
@@ -761,7 +836,7 @@ Method Documentation
 
 		Create an aclock structure and start it.
 
-		Returns: A new, running, aclock instance
+		Return: A new, running, aclock instance
 
 
 		-----
@@ -770,7 +845,7 @@ Method Documentation
 		Free an aclock structure
 
 		Parameter: The aclock instance
-		Returns: NULL pointer
+		Return: NULL pointer
 
 
 		-----
@@ -779,7 +854,7 @@ Method Documentation
 		Initialize the members of a clock structure.
 
 		Parameter: The aclock instance
-		Returns: The current elapsed time
+		Return: The current elapsed time
 
 
 		-----
@@ -788,7 +863,7 @@ Method Documentation
 		Restart a clock.
 
 		Parameter: The aclock instance
-		Returns: The current elapsed time
+		Return: The current elapsed time
 
 
 		-----
@@ -808,7 +883,7 @@ Method Documentation
 		that the clock was stopped.
 
 		Parameter: The aclock instance
-		Returns: The current elapsed time
+		Return: The current elapsed time
 
 
 		-----
@@ -822,7 +897,7 @@ Method Documentation
 		function is called to restart it.
 
 		Parameter: The aclock instance
-		Returns: The current elapsed time
+		Return: The current elapsed time
 
 
 		-----
@@ -834,7 +909,7 @@ Method Documentation
 		restart it.
 
 		Parameter: The aclock instance
-		Returns: The current elapsed time
+		Return: The current elapsed time
 
 
 		-----
@@ -845,7 +920,7 @@ Method Documentation
 		Reset the loop timer to zero.
 
 		Parameter: The aclock instance
-		Returns: The number of seconds since loop() was last called
+		Return: The number of seconds since loop() was last called
 
 
 		-----
@@ -856,7 +931,7 @@ Method Documentation
 		Does not reset the loop timer.
 
 		Parameter: The aclock instance
-		Returns: The number of seconds since loop() was last called
+		Return: The number of seconds since loop() was last called
 
 
 		-----
@@ -867,7 +942,7 @@ Method Documentation
 		running.
 
 		Parameter: The aclock instance
-		Returns: The current elapsed time
+		Return: The current elapsed time
 
 
 		-----
@@ -891,4 +966,314 @@ Method Documentation
 		Parameter: A pointer to a double to store the number of hours of elapsed time in the days
 		Parameter: A pointer to a double to store the number of minutes of elapsed time in the hour
 		Parameter: A pointer to a double to store the number of seconds of elapsed time in the minute
-		Returns: The passed-in elapsed time
+		Return: The passed-in elapsed time
+
+
+	------------------------------
+	atm.c - Adept Time
+
+		-----
+		atm_allocate
+
+		Allocate the memory for an atm structure.
+		Allocates the memory for the enclosing structure and for the components.
+
+		Return:    Pointer to the new instance.
+
+
+		-----
+		atm_free
+
+		Free the memory that was allocated for an atm structure.
+
+		Parameter: The atm instance to be freed.
+		Return:    NULL pointer.
+
+
+		-----
+		atm_create_now
+
+		Create an atm instance initialized with the current time.
+
+		Return:    Pointer to the new instance.
+
+
+		-----
+		atm_create_from_time_t
+
+		Create an atm instance initialized with the specified time.
+
+		Parameter: The time to initialize the new instance with.
+		Return:    Pointer to the new instance.
+
+
+		-----
+		atm_create_from_gmtime
+
+		Create an atm instance initialized with the specified gm time.
+
+		Parameter: The time to initialize the new instance with.
+		Return:    Pointer to the new instance.
+
+
+		-----
+		atm_create_from_loctime
+
+		Create an atm instance initialized with the specified local time.
+
+		Parameter: The time to initialize the new instance with.
+		Return:    Pointer to the new instance.
+
+
+		-----
+		atm_copy
+
+		Create a copy of an atm instance.
+
+		Parameter: The time instance to be copied.
+		Return:    Pointer to the new instance.
+
+
+		-----
+		atm_set_now
+
+		Set or create an atm instance initialized with the current time.
+
+		Parameter: The time instance to be reset to the current time.
+
+
+		-----
+		atm_set_original
+
+		Set an atm instance to its original time.
+		The original time is the time that was set when the instance was allocated
+		and initialized.  It is retained over the lifetime of the instance, so the
+		instance can be returned to its originally set time.
+
+		NOTE: Does nothing if the supplied atm instance is NULL
+
+		Parameter: The time instance to be reset to its original value.
+
+
+		-----
+		atm_set_from_time_t
+
+		Set or create an atm instance initialized with the specified time.
+
+		Parameter: The time instance to be reset.
+		Parameter: The new time to set the instance with.
+
+
+		-----
+		atm_set_from_gmtime
+
+		Set or create an atm instance initialized with the specified gm time.
+
+		Parameter: The time instance to be reset.
+		Parameter: The new time to set the instance with.
+
+
+		-----
+		atm_set_from_localtime
+
+		Set or create an atm instance initialized with the specified local time.
+
+		Parameter: The time instance to be reset.
+		Parameter: The new time to set the instance with.
+
+
+		-----
+		atm_compare
+
+		Compare two atm instances.
+
+		Parameter: The left side of the comparison.
+		Parameter: The right side of the comparison.
+		Parameter: The comparison mode to use.
+		Return:    A number less than, equal to, or greater than zero if
+		left is less than, equal to, or greater than right, respectively.
+
+
+		-----
+		atm_is_equal
+
+		Determine if left is a time that is equal to right.
+
+		Parameter: The left side of the comparison.
+		Parameter: The right side of the comparison.
+		Parameter: The comparison mode to use.
+		Return:    1 if true, 0 if false;
+
+
+		-----
+		atm_is_before
+
+		Determine if left is a time that is before (less than) right.
+
+		Parameter: The left side of the comparison.
+		Parameter: The right side of the comparison.
+		Parameter: The comparison mode to use.
+		Return:    1 if true, 0 if false;
+
+
+		-----
+		atm_is_after
+
+		Determine if left is a time that is after (greater than) right.
+
+		Parameter: The left side of the comparison.
+		Parameter: The right side of the comparison.
+		Parameter: The comparison mode to use.
+		Return:    1 if true, 0 if false;
+
+
+		-----
+		atm_compare_date
+
+		Compare the date components of two atm instances.
+
+		Called when comparing two atm instances with
+		the atm_comparison_mode of DATEONLY or DATEANDTIME.
+
+		Parameter: The left side of the comparison.
+		Parameter: The right side of the comparison.
+		Return:    A number less than, equal to, or greater than zero if
+		left is less than, equal to, or greater than right, respectively.
+
+
+		-----
+		atm_compare_time
+
+		Compare the time components of two atm instances.
+
+		Called when comparing two atm instances with
+		the atm_comparison_mode of TIMEONLY or DATEANDTIME.
+
+		Parameter: The left side of the comparison.
+		Parameter: The right side of the comparison.
+		Return:    A number less than, equal to, or greater than zero if
+		left is less than, equal to, or greater than right, respectively.
+
+
+		-----
+		atm_earliest
+
+		Determine the earliest of two atm instances.
+
+		Parameter: The left side of the comparison.
+		Parameter: The right side of the comparison.
+		Parameter: The comparison mode to use.
+		Return:    Pointer to the earliest of the two atm instances.
+		If the two are equal, return the second parameter.
+
+
+		-----
+		atm_latest
+
+		Determine the latest of two atm instances.
+
+		Parameter: The left side of the comparison.
+		Parameter: The right side of the comparison.
+		Parameter: The comparison mode to use.
+		Return:    Pointer to the latest of the two atm instances.
+		If the two are equal, return the second parameter.
+
+
+	------------------------------
+	atm_range.c - Adept Time Range
+
+		-----
+		atm_range_allocate
+
+		Allocate the memory for an atm_range structure.
+		Allocates the memory for the enclosing structure and for the components.
+
+		Return:    Pointer to the new instance.
+
+
+		-----
+		atm_range_free
+
+		Free the memory that was allocated for an atm_range structure.
+
+		Parameter: The time range to be freed.
+		Return:    NULL pointer.
+
+
+		-----
+		atm_range_create
+
+		Create a time range with copies of the supplied begin and end times.
+		The times do not need to be in order.
+		This function sets the beginning of the range to the earliest time and
+		sets the end of the range to latest time.
+
+		Parameter: A time that is part of the range.
+		Parameter: A time that is part of the range.
+		Return:    Pointer to the new instance.
+
+
+		-----
+		atm_range_copy
+
+		Create a copy of a time range.
+
+		Parameter: The time range to be copied.
+		Return:    Pointer to the new instance.
+
+
+		-----
+		atm_range_set
+
+		Set the range with copies of the supplied begin and end times.
+		The times do not need to be in order.
+		This function sets the beginning of the range to the earliest time and
+		sets the end of the range to latest time.
+
+		Parameter: The time range to be reset.
+		Parameter: A time that is part of the range.
+		Parameter: A time that is part of the range.
+
+
+		-----
+		atm_range_is_equal
+
+		Determine if the begin and end times of two atm ranges are equal.
+
+		Parameter: The left side of the comparison.
+		Parameter: The right side of the comparison.
+		Parameter: The comparison mode.
+		Return:    1 if true, 0 if false.
+
+
+		-----
+		atm_is_in_range
+
+		Determine if the atm is between the begin and end times of the atm range (inclusive).
+
+		Parameter: The time to check.
+		Parameter: The range to use for the comparison..
+		Parameter: The comparison mode.
+		Return:    1 if true, 0 if false.
+
+
+		-----
+		atm_is_before_range
+
+		Determine if the atm is before the begin time of the atm range.
+
+		Parameter: The time to check.
+		Parameter: The range to use for the comparison..
+		Parameter: The comparison mode.
+		Return:    1 if true, 0 if false.
+
+
+		-----
+		atm_is_after_range
+
+		Determine if the atm is after the end time of the atm range.
+
+		Parameter: The time to check.
+		Parameter: The range to use for the comparison..
+		Parameter: The comparison mode.
+		Return:    1 if true, 0 if false.

@@ -17,7 +17,9 @@ int compare_int(int left, int right);
  * Compare two integers.
  * Returns the result of subtracting right from left.
  *
- * Return a number less than, equal to, or greater than zero if
+ * Parameter: The left side of the comparison.
+ * Parameter: The right side of the comparison.
+ * Return:    a number less than, equal to, or greater than zero if
  * left is less than, equal to, or greater than right, respectively.
  */
 int compare_int(int left, int right) {
@@ -29,7 +31,7 @@ int compare_int(int left, int right) {
  *
  * Allocates the memory for the enclosing structure and for the components.
  *
- * Return a pointer to the new instance.
+ * Return:    Pointer to the new instance.
  */
 atm *atm_allocate() {
 	atm *at = calloc(1, sizeof(atm));
@@ -41,7 +43,8 @@ atm *atm_allocate() {
 /*
  * Free the memory that was allocated for an atm structure.
  *
- * Return a NULL pointer.
+ * Parameter: The atm instance to be freed.
+ * Return:    NULL pointer.
  */
 atm *atm_free(atm *at) {
 	if(at != NULL) {
@@ -59,7 +62,7 @@ atm *atm_free(atm *at) {
 /*
  * Create an atm instance initialized with the current time.
  *
- * Return a pointer to the new instance.
+ * Return:    Pointer to the new instance.
  */
 atm *atm_create_now() {
 	time_t t = time(0);
@@ -70,7 +73,8 @@ atm *atm_create_now() {
 /*
  * Create an atm instance initialized with the specified time.
  *
- * Return a pointer to the new instance.
+ * Parameter: The time to initialize the new instance with.
+ * Return:    Pointer to the new instance.
  */
 atm *atm_create_from_time_t(time_t *t) {
 	atm *at = NULL;
@@ -84,7 +88,8 @@ atm *atm_create_from_time_t(time_t *t) {
 /*
  * Create an atm instance initialized with the specified gm time.
  *
- * Return a pointer to the new instance.
+ * Parameter: The time to initialize the new instance with.
+ * Return:    Pointer to the new instance.
  */
 atm *atm_create_from_gmtime(struct tm *gmtm) {
 	atm *at = NULL;
@@ -98,7 +103,8 @@ atm *atm_create_from_gmtime(struct tm *gmtm) {
 /*
  * Create an atm instance initialized with the specified local time.
  *
- * Return a pointer to the new instance.
+ * Parameter: The time to initialize the new instance with.
+ * Return:    Pointer to the new instance.
  */
 atm *atm_create_from_loctime(struct tm *loctm) {
 	atm *at = NULL;
@@ -112,7 +118,8 @@ atm *atm_create_from_loctime(struct tm *loctm) {
 /*
  * Create a copy of an atm instance.
  *
- * Return a pointer to the new instance.
+ * Parameter: The time instance to be copied.
+ * Return:    Pointer to the new instance.
  */
 atm *atm_copy(atm *src) {
 	atm *at = NULL;
@@ -128,6 +135,8 @@ atm *atm_copy(atm *src) {
 
 /*
  * Set or create an atm instance initialized with the current time.
+ *
+ * Parameter: The time instance to be reset to the current time.
  */
 void atm_set_now(atm *at) {
 	if (at == NULL) {
@@ -144,6 +153,8 @@ void atm_set_now(atm *at) {
  * instance can be returned to its originally set time.
  *
  * NOTE: Does nothing if the supplied atm instance is NULL
+ *
+ * Parameter: The time instance to be reset to its original value.
  */
 void atm_set_original(atm *at) {
 	if (at != NULL) {
@@ -154,6 +165,9 @@ void atm_set_original(atm *at) {
 
 /*
  * Set or create an atm instance initialized with the specified time.
+ *
+ * Parameter: The time instance to be reset.
+ * Parameter: The new time to set the instance with.
  */
 void atm_set_from_time_t(atm *at, time_t *t) {
 	if (t != NULL) {
@@ -171,6 +185,9 @@ void atm_set_from_time_t(atm *at, time_t *t) {
 
 /*
  * Set or create an atm instance initialized with the specified gm time.
+ *
+ * Parameter: The time instance to be reset.
+ * Parameter: The new time to set the instance with.
  */
 void atm_set_from_gmtime(atm *at, struct tm *tm) {
 	if (tm != NULL) {
@@ -188,6 +205,9 @@ void atm_set_from_gmtime(atm *at, struct tm *tm) {
 
 /*
  * Set or create an atm instance initialized with the specified local time.
+ *
+ * Parameter: The time instance to be reset.
+ * Parameter: The new time to set the instance with.
  */
 void atm_set_from_localtime(atm *at, struct tm *tm) {
 	if (tm != NULL) {
@@ -206,7 +226,10 @@ void atm_set_from_localtime(atm *at, struct tm *tm) {
 /*
  * Compare two atm instances.
  *
- * Return a number less than, equal to, or greater than zero if
+ * Parameter: The left side of the comparison.
+ * Parameter: The right side of the comparison.
+ * Parameter: The comparison mode to use.
+ * Return:    A number less than, equal to, or greater than zero if
  * left is less than, equal to, or greater than right, respectively.
  */
 int atm_compare(atm *left, atm *right, atm_comparison_mode cmp) {
@@ -234,7 +257,10 @@ int atm_compare(atm *left, atm *right, atm_comparison_mode cmp) {
 /*
  * Determine if left is a time that is equal to right.
  *
- * Return 1 if true, 0 if false;
+ * Parameter: The left side of the comparison.
+ * Parameter: The right side of the comparison.
+ * Parameter: The comparison mode to use.
+ * Return:    1 if true, 0 if false;
  */
 int atm_is_equal(atm *left, atm *right, atm_comparison_mode cmp) {
 	return atm_compare(left, right, cmp) == 0 ? 1 : 0;
@@ -243,7 +269,10 @@ int atm_is_equal(atm *left, atm *right, atm_comparison_mode cmp) {
 /*
  * Determine if left is a time that is before (less than) right.
  *
- * Return 1 if true, 0 if false;
+ * Parameter: The left side of the comparison.
+ * Parameter: The right side of the comparison.
+ * Parameter: The comparison mode to use.
+ * Return:    1 if true, 0 if false;
  */
 int atm_is_before(atm *left, atm *right, atm_comparison_mode cmp) {
 	return atm_compare(left, right, cmp) < 0 ? 1 : 0;
@@ -252,7 +281,10 @@ int atm_is_before(atm *left, atm *right, atm_comparison_mode cmp) {
 /*
  * Determine if left is a time that is after (greater than) right.
  *
- * Return 1 if true, 0 if false;
+ * Parameter: The left side of the comparison.
+ * Parameter: The right side of the comparison.
+ * Parameter: The comparison mode to use.
+ * Return:    1 if true, 0 if false;
  */
 int atm_is_after(atm *left, atm *right, atm_comparison_mode cmp) {
 	return atm_compare(left, right, cmp) > 0 ? 1 : 0;
@@ -285,7 +317,9 @@ int atm_is_after(atm *left, atm *right, atm_comparison_mode cmp) {
  * Called when comparing two atm instances with
  * the atm_comparison_mode of DATEONLY or DATEANDTIME.
  *
- * Return a number less than, equal to, or greater than zero if
+ * Parameter: The left side of the comparison.
+ * Parameter: The right side of the comparison.
+ * Return:    A number less than, equal to, or greater than zero if
  * left is less than, equal to, or greater than right, respectively.
  */
 int atm_compare_date(atm *left, atm *right) {
@@ -312,7 +346,9 @@ int atm_compare_date(atm *left, atm *right) {
  * Called when comparing two atm instances with
  * the atm_comparison_mode of TIMEONLY or DATEANDTIME.
  *
- * Return a number less than, equal to, or greater than zero if
+ * Parameter: The left side of the comparison.
+ * Parameter: The right side of the comparison.
+ * Return:    A number less than, equal to, or greater than zero if
  * left is less than, equal to, or greater than right, respectively.
  */
 int atm_compare_time(atm *left, atm *right) {
@@ -336,7 +372,10 @@ int atm_compare_time(atm *left, atm *right) {
 /*
  * Determine the earliest of two atm instances.
  *
- * Return a pointer to the earliest of the two atm instances.
+ * Parameter: The left side of the comparison.
+ * Parameter: The right side of the comparison.
+ * Parameter: The comparison mode to use.
+ * Return:    Pointer to the earliest of the two atm instances.
  * If the two are equal, return the second parameter.
  */
 atm *atm_earliest(atm *at1, atm *at2, atm_comparison_mode cmp) {
@@ -356,7 +395,10 @@ atm *atm_earliest(atm *at1, atm *at2, atm_comparison_mode cmp) {
 /*
  * Determine the latest of two atm instances.
  *
- * Return a pointer to the latest of the two atm instances.
+ * Parameter: The left side of the comparison.
+ * Parameter: The right side of the comparison.
+ * Parameter: The comparison mode to use.
+ * Return:    Pointer to the latest of the two atm instances.
  * If the two are equal, return the second parameter.
  */
 atm *atm_latest(atm *at1, atm *at2, atm_comparison_mode cmp) {

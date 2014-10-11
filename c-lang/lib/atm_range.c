@@ -1,4 +1,4 @@
-// atm.c - Adept Time Range
+// atm_range.c - Adept Time Range
 
 /*
  * Date and Time functions using the tm structure and time_t.
@@ -15,7 +15,7 @@
  *
  * Allocates the memory for the enclosing structure and for the components.
  *
- * Return a pointer to the new instance.
+ * Return:    Pointer to the new instance.
  */
 atm_range *atm_range_allocate() {
 	atm_range *range = calloc(1, sizeof(atm_range));
@@ -27,7 +27,8 @@ atm_range *atm_range_allocate() {
 /*
  * Free the memory that was allocated for an atm_range structure.
  *
- * Return a NULL pointer.
+ * Parameter: The time range to be freed.
+ * Return:    NULL pointer.
  */
 atm_range *atm_range_free(atm_range *range) {
 	if(range != NULL) {
@@ -48,7 +49,9 @@ atm_range *atm_range_free(atm_range *range) {
  * This function sets the beginning of the range to the earliest time and
  * sets the end of the range to latest time.
  *
- * Return a pointer to the new instance.
+ * Parameter: A time that is part of the range.
+ * Parameter: A time that is part of the range.
+ * Return:    Pointer to the new instance.
  */
 atm_range *atm_range_create(atm *at1, atm *at2) {
 	atm_range *range = NULL;
@@ -62,7 +65,8 @@ atm_range *atm_range_create(atm *at1, atm *at2) {
 /*
  * Create a copy of a time range.
  *
- * Return a pointer to the new instance.
+ * Parameter: The time range to be copied.
+ * Return:    Pointer to the new instance.
  */
 atm_range *atm_range_copy(atm_range *src) {
 	atm_range *range = NULL;
@@ -79,6 +83,10 @@ atm_range *atm_range_copy(atm_range *src) {
  * The times do not need to be in order.
  * This function sets the beginning of the range to the earliest time and
  * sets the end of the range to latest time.
+ *
+ * Parameter: The time range to be reset.
+ * Parameter: A time that is part of the range.
+ * Parameter: A time that is part of the range.
  */
 void atm_range_set(atm_range *range, atm *at1, atm *at2) {
 	if(at1 != NULL && at2 != NULL) {
@@ -93,7 +101,10 @@ void atm_range_set(atm_range *range, atm *at1, atm *at2) {
 /*
  * Determine if the begin and end times of two atm ranges are equal.
  *
- * Return 1 if true, 0 if false.
+ * Parameter: The left side of the comparison.
+ * Parameter: The right side of the comparison.
+ * Parameter: The comparison mode.
+ * Return:    1 if true, 0 if false.
  */
 int atm_range_is_equal(atm_range *left, atm_range *right, atm_comparison_mode cmp) {
 	int result = 1;
@@ -110,7 +121,10 @@ int atm_range_is_equal(atm_range *left, atm_range *right, atm_comparison_mode cm
 /*
  * Determine if the atm is between the begin and end times of the atm range (inclusive).
  *
- * Return 1 if true, 0 if false.
+ * Parameter: The time to check.
+ * Parameter: The range to use for the comparison..
+ * Parameter: The comparison mode.
+ * Return:    1 if true, 0 if false.
  */
 int atm_is_in_range(atm *at, atm_range *range, atm_comparison_mode cmp) {
 	int result = 1;
@@ -127,7 +141,10 @@ int atm_is_in_range(atm *at, atm_range *range, atm_comparison_mode cmp) {
 /*
  * Determine if the atm is before the begin time of the atm range.
  *
- * Return 1 if true, 0 if false.
+ * Parameter: The time to check.
+ * Parameter: The range to use for the comparison..
+ * Parameter: The comparison mode.
+ * Return:    1 if true, 0 if false.
  */
 int atm_is_before_range(atm *at, atm_range *range, atm_comparison_mode cmp) {
 	int result = 1;
@@ -141,7 +158,10 @@ int atm_is_before_range(atm *at, atm_range *range, atm_comparison_mode cmp) {
 /*
  * Determine if the atm is after the end time of the atm range.
  *
- * Return 1 if true, 0 if false.
+ * Parameter: The time to check.
+ * Parameter: The range to use for the comparison..
+ * Parameter: The comparison mode.
+ * Return:    1 if true, 0 if false.
  */
 int atm_is_after_range(atm *at, atm_range *range, atm_comparison_mode cmp) {
 	int result = 1;
