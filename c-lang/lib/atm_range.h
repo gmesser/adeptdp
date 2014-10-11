@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-typedef struct {
+typedef struct atm_range {
 	atm *begin;	// The beginning of the range.
 	atm *end;	// The end of the range.
 } atm_range;
@@ -23,7 +23,7 @@ atm_range *atm_range_allocate();
 atm_range *atm_range_free(atm_range *range);
 atm_range *atm_range_create(atm *begin, atm *end);
 
-atm_range *atm_range_copy(atm_range *dst, atm_range *src);
+atm_range *atm_range_copy(atm_range *src);
 
 void atm_range_set(atm_range *range, atm *begin, atm *end);
 

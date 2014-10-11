@@ -39,9 +39,9 @@
 extern "C" {
 #endif
 
-typedef enum { DATEONLY, TIMEONLY, DATEANDTIME } atm_comparison_mode;
+typedef enum atm_comparison_mode { DATEONLY, TIMEONLY, DATEANDTIME } atm_comparison_mode;
 
-typedef struct {
+typedef struct atm {
 	time_t original;	// The original calendar time that was set.
 	time_t time;		// The calendar time - in seconds.
 	struct tm *gm;		// The Greenwich mean time (UTC).
@@ -55,7 +55,7 @@ atm *atm_create_from_time_t(time_t *t);
 atm *atm_create_from_gmtime(struct tm *tm);
 atm *atm_create_from_loctime(struct tm *tm);
 
-atm *atm_copy(atm *dst, atm *src);
+atm *atm_copy(atm *src);
 
 void atm_set_now(atm *at);
 void atm_set_original(atm *at);

@@ -14,6 +14,8 @@
  * Allocate the memory for an atm_range structure.
  *
  * Allocates the memory for the enclosing structure and for the components.
+ *
+ * Return a pointer to the new instance.
  */
 atm_range *atm_range_allocate() {
 	atm_range *range = calloc(1, sizeof(atm_range));
@@ -24,6 +26,8 @@ atm_range *atm_range_allocate() {
 
 /*
  * Free the memory that was allocated for an atm_range structure.
+ *
+ * Return a NULL pointer.
  */
 atm_range *atm_range_free(atm_range *range) {
 	if(range != NULL) {
@@ -43,6 +47,8 @@ atm_range *atm_range_free(atm_range *range) {
  * The times do not need to be in order.
  * This function sets the beginning of the range to the earliest time and
  * sets the end of the range to latest time.
+ *
+ * Return a pointer to the new instance.
  */
 atm_range *atm_range_create(atm *at1, atm *at2) {
 	atm_range *range = NULL;
@@ -55,16 +61,17 @@ atm_range *atm_range_create(atm *at1, atm *at2) {
 
 /*
  * Create a copy of a time range.
+ *
+ * Return a pointer to the new instance.
  */
-atm_range *atm_range_copy(atm_range *dst, atm_range *src) {
+atm_range *atm_range_copy(atm_range *src) {
+	atm_range *range = NULL;
 	if(src != NULL) {
-		if(dst != NULL) {
-			dst = atm_range_free(dst);
-			dst = atm_range_allocate();
-		}
-		dst->begin = atm_copy(dst->begin, atm_earliest(src->begin, src->end, DATEANDTIME));
-		dst->end = atm_copy(dst->end, atm_latest(src->begin, src->end, DATEANDTIME));
+		range = atm_range_allocate();
+		range->begin = atm_copy(atm_earliest(src->begin, src->end, DATEANDTIME));
+		range->end = atm_copy(atm_latest(src->begin, src->end, DATEANDTIME));
 	}
+	return range;
 }
 
 /*
@@ -78,8 +85,8 @@ void atm_range_set(atm_range *range, atm *at1, atm *at2) {
 		if(range == NULL) {
 			range = atm_range_allocate();
 		}
-		range->begin = atm_copy(range->begin, atm_earliest(at1, at2, DATEANDTIME));
-		range->end = atm_copy(range->end, atm_latest(at1, at2, DATEANDTIME));
+		range->begin = atm_copy(atm_earliest(at1, at2, DATEANDTIME));
+		range->end = atm_copy(atm_latest(at1, at2, DATEANDTIME));
 	}
 }
 

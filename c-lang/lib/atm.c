@@ -28,6 +28,8 @@ int compare_int(int left, int right) {
  * Allocate the memory for an atm structure.
  *
  * Allocates the memory for the enclosing structure and for the components.
+ *
+ * Return a pointer to the new instance.
  */
 atm *atm_allocate() {
 	atm *at = calloc(1, sizeof(atm));
@@ -38,6 +40,8 @@ atm *atm_allocate() {
 
 /*
  * Free the memory that was allocated for an atm structure.
+ *
+ * Return a NULL pointer.
  */
 atm *atm_free(atm *at) {
 	if(at != NULL) {
@@ -54,6 +58,8 @@ atm *atm_free(atm *at) {
 
 /*
  * Create an atm instance initialized with the current time.
+ *
+ * Return a pointer to the new instance.
  */
 atm *atm_create_now() {
 	time_t t = time(0);
@@ -63,6 +69,8 @@ atm *atm_create_now() {
 
 /*
  * Create an atm instance initialized with the specified time.
+ *
+ * Return a pointer to the new instance.
  */
 atm *atm_create_from_time_t(time_t *t) {
 	atm *at = NULL;
@@ -75,6 +83,8 @@ atm *atm_create_from_time_t(time_t *t) {
 
 /*
  * Create an atm instance initialized with the specified gm time.
+ *
+ * Return a pointer to the new instance.
  */
 atm *atm_create_from_gmtime(struct tm *gmtm) {
 	atm *at = NULL;
@@ -87,6 +97,8 @@ atm *atm_create_from_gmtime(struct tm *gmtm) {
 
 /*
  * Create an atm instance initialized with the specified local time.
+ *
+ * Return a pointer to the new instance.
  */
 atm *atm_create_from_loctime(struct tm *loctm) {
 	atm *at = NULL;
@@ -99,25 +111,28 @@ atm *atm_create_from_loctime(struct tm *loctm) {
 
 /*
  * Create a copy of an atm instance.
+ *
+ * Return a pointer to the new instance.
  */
-atm *atm_copy(atm *dst, atm *src) {
+atm *atm_copy(atm *src) {
+	atm *at = NULL;
 	if (src != NULL) {
-		if(dst != NULL) {
-			dst = atm_free(dst);
-			dst = atm_allocate();
-		}
-		dst->time = src->time;
-		dst->original = src->original;
-		memcpy(dst->gm, src->gm, sizeof(struct tm));
-		memcpy(dst->loc, src->loc, sizeof(struct tm));
+		at = atm_allocate();
+		at->time = src->time;
+		at->original = src->original;
+		memcpy(at->gm, src->gm, sizeof(struct tm));
+		memcpy(at->loc, src->loc, sizeof(struct tm));
 	}
-	return dst;
+	return at;
 }
 
 /*
  * Set or create an atm instance initialized with the current time.
  */
 void atm_set_now(atm *at) {
+	if (at == NULL) {
+		at = atm_allocate();
+	}
 	time_t t = time(0);
 	atm_set_from_time_t(at, &t);
 }
@@ -127,9 +142,11 @@ void atm_set_now(atm *at) {
  * The original time is the time that was set when the instance was allocated 
  * and initialized.  It is retained over the lifetime of the instance, so the 
  * instance can be returned to its originally set time.
+ *
+ * NOTE: Does nothing if the supplied atm instance is NULL
  */
 void atm_set_original(atm *at) {
-	if(at != NULL) {
+	if (at != NULL) {
 		time_t t = at->original;
 		atm_set_from_time_t(at, &t);
 	}
@@ -319,7 +336,7 @@ int atm_compare_time(atm *left, atm *right) {
 /*
  * Determine the earliest of two atm instances.
  *
- * Return the earliest of the two atm instances.
+ * Return a pointer to the earliest of the two atm instances.
  * If the two are equal, return the second parameter.
  */
 atm *atm_earliest(atm *at1, atm *at2, atm_comparison_mode cmp) {
@@ -339,7 +356,7 @@ atm *atm_earliest(atm *at1, atm *at2, atm_comparison_mode cmp) {
 /*
  * Determine the latest of two atm instances.
  *
- * Return the latest of the two atm instances.
+ * Return a pointer to the latest of the two atm instances.
  * If the two are equal, return the second parameter.
  */
 atm *atm_latest(atm *at1, atm *at2, atm_comparison_mode cmp) {
