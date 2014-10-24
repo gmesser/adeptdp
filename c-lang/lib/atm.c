@@ -4,6 +4,7 @@
  * Date and Time functions using the tm structure and time_t.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -413,4 +414,14 @@ atm *atm_latest(atm *at1, atm *at2, atm_comparison_mode cmp) {
 	}
 
 	return at;
+}
+
+char *atm_to_string(atm *at) {
+	int sz = (sizeof(time_t) * 5) + 1;
+	char *tstr = calloc(1, sz);
+	if(tstr != NULL) {
+		snprintf(tstr, sz, "%lu", at->time);
+		tstr = realloc(tstr, strlen(tstr) + 1);
+	}
+	return tstr;
 }

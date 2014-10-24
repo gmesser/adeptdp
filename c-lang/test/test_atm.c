@@ -90,7 +90,7 @@ void print_atm(atm *at) {
 }
 
 void print_atm_time_t(atm *at) {
-	printf("time_t... original: %ld, time: %ld\n", 
+	printf("time_t... original: %lu, time: %lu\n",
 		at->original, at->time);
 }
 
@@ -236,6 +236,24 @@ void test_atm_compare_timeonly() {
 	free_test_times();
 }
 
+void test_atm_to_string() {
+	atm *at = atm_create_now();
+	aut_assert("test atm_to_string", at != NULL);
+	char *atstr = atm_to_string(at);
+	aut_assert("test atm_to_string not null", atstr != NULL);
+
+//	print_atm(at);
+//	printf("%s\n", atstr);
+
+	char teststr[41];
+	snprintf(teststr, 41, "%lu", at->time);
+	aut_assert("test atm_to_string length", strlen(atstr) == strlen(teststr));
+	aut_assert("test atm_to_string content", strcmp(atstr, teststr) == 0);
+
+	at = atm_free(at);
+}
+
+
 // ----------
 
 int main(int argc, char *argv[]) {
@@ -251,6 +269,7 @@ int main(int argc, char *argv[]) {
 	aut_run_test(test_atm_compare_dateandtime);
 	aut_run_test(test_atm_compare_dateonly);
 	aut_run_test(test_atm_compare_timeonly);
+	aut_run_test(test_atm_to_string);
 	aut_report();
 	aut_terminate_suite();
 	aut_return();

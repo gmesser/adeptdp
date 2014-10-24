@@ -33,6 +33,8 @@ int atm_is_in_range(atm *adt, atm_range *range, atm_comparison_mode cmp);
 int atm_is_before_range(atm *adt, atm_range *range, atm_comparison_mode cmp);
 int atm_is_after_range(atm *adt, atm_range *range, atm_comparison_mode cmp);
 
+char *atm_range_to_string(atm_range *range);
+
 #ifdef	__cplusplus
 }
 #endif

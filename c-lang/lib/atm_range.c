@@ -4,6 +4,7 @@
  * Date and Time functions using the tm structure and time_t.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -170,4 +171,17 @@ int atm_is_after_range(atm *at, atm_range *range, atm_comparison_mode cmp) {
 	}
 
 	return result;
+}
+
+char *atm_range_to_string(atm_range *range) {
+	char *begstr = atm_to_string(range->begin);
+	char *endstr = atm_to_string(range->end);
+	int sz = strlen(begstr) + strlen(endstr) + 2;
+	char *rstr = calloc(1, sz);
+	if(rstr != NULL) {
+		snprintf(rstr, sz, "%s:%s", begstr, endstr);
+	}
+	free(begstr);
+	free(endstr);
+	return rstr;
 }

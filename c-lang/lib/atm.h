@@ -77,6 +77,8 @@ int atm_is_after(atm *left, atm *right, atm_comparison_mode cmp);
 atm *atm_earliest(atm *at1, atm *at2, atm_comparison_mode cmp);
 atm *atm_latest(atm *at1, atm *at2, atm_comparison_mode cmp);
 
+char *atm_to_string(atm *at);
+
 #ifdef	__cplusplus
 }
 #endif

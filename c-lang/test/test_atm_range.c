@@ -184,6 +184,23 @@ void test_is_after() {
 	free_test_times();
 }
 
+void test_to_string() {
+	create_test_times();
+	atm_range *range = atm_range_create(athourless, atmonless);
+	char *rangestr = atm_range_to_string(range);
+	aut_assert("test atm_range_to_string not null", rangestr != NULL);
+//	print_atm_time_t(range->begin);
+//	print_atm_time_t(range->end);
+//	printf("%s\n", rangestr);
+
+	char teststr[128];
+	snprintf(teststr, 128, "%lu:%lu", range->begin->time, range->end->time);
+	aut_assert("test atm_range_to_string length", strlen(rangestr) == strlen(teststr));
+	aut_assert("test atm_range_to_string not null", strcmp(rangestr, teststr) == 0);
+
+	free_test_times();
+}
+
 // ----------
 
 int main(int argc, char *argv[]) {
@@ -193,6 +210,7 @@ int main(int argc, char *argv[]) {
 	aut_run_test(test_is_equal);
 	aut_run_test(test_is_before);
 	aut_run_test(test_is_after);
+	aut_run_test(test_to_string);
 	aut_report();
 	aut_terminate_suite();
 	aut_return();
