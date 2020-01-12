@@ -1,4 +1,4 @@
-// astr_classifications.c - Adept String
+// astr_classifications.c - Adept String Classifications
 
 /*
  * Functions to determine if the contents of an astr match various

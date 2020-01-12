@@ -1,4 +1,4 @@
-// astr_compare.c - Adept String
+// astr_compare.c - Adept String Comparisons
 
 #include <stdlib.h>
 #include <string.h>

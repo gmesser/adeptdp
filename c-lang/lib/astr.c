@@ -1,8 +1,11 @@
 // astr.c - Adept String
 
 /*
- * An astr instance is optimized for comparisons.  It maintains a simple
- * integer checksum that it uses to quickly detect when strings do not match.
+ * The astr object is optimized for retrieving the length of the string
+ * in the astr instance and for detecting inequality of the strings in
+ * two astr instances.  
+ * It maintains a simple integer checksum that it uses to quickly detect when 
+ * strings do not match.
  * It accumulates the integer checksum while the instance is being created.
  * This is fast, and accumulating the checksum does not slow down creation too
  * much.  A hash would have been even better at detecting non-matches, with

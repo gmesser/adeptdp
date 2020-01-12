@@ -392,7 +392,7 @@ char *afile_print_struct(const afile *af) {
 	char *lbl_open_modes     = "open_modes:     ";
 	char *lbl_buffering_mode = "buffering_mode: ";
 	char *lbl_buffer_size    = "buffer_size:    ";
-	char *lbl_buffer         = "buffer ptr.:    ";
+	char *lbl_buffer         = "buffer pointer: ";
 	int length;
 	char *string = NULL;
 

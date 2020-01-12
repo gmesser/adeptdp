@@ -250,7 +250,7 @@ double aclock_loop(aclock *ac) {
 }
 
 /*
- * checkloop
+ * aclock_check_loop
  *
  * Calculate the number of seconds
  * since loop() was last called.

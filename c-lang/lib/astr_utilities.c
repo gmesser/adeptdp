@@ -1,4 +1,4 @@
-// astr_utilities.c - Adept String
+// astr_utilities.c - Adept String Utilities
 
 /*
  * General-purpose utility functions.
@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #include "astr.h"
 

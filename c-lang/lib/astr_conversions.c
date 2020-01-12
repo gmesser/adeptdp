@@ -1,4 +1,4 @@
-// astr_conversions.c - Adept String
+// astr_conversions.c - Adept String Conversions
 
 /*
  * Functions to convert the contents of an astr instance to a numeric value in

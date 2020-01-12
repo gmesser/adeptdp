@@ -1,4 +1,4 @@
-// astr_edits.c - Adept String
+// astr_edits.c - Adept String Edits
 
 /*
  * These functions edit the contents of an astr instance.

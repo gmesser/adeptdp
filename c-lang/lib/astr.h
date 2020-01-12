@@ -8,7 +8,9 @@
 /*
  * The astr object is optimized for retrieving the length of the string
  * in the astr instance and for detecting inequality of the strings in
- * two astr instances.  It also provides a mechanism for constructing
+ * two astr instances.  
+ * 
+ * It also provides a mechanism for constructing
  * a null-terminated string from a character buffer of known length.
  * 
  * Getting the length is a constant-time operations, regardless of the

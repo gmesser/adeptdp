@@ -1,4 +1,4 @@
-// afile.h - Adept file handling
+// afile.h - Adept File 
 
 #ifndef AFILE_H
 #define AFILE_H

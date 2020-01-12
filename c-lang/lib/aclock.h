@@ -1,4 +1,4 @@
-// aclock.h
+// aclock.h - Adept Clock
 
 #ifndef ACLOCK_H
 #define ACLOCK_H
